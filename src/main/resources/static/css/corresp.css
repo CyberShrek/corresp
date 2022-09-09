@@ -1,35 +1,80 @@
 body {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 0;
+    display: grid;
+    grid-template-rows: 1fr 200px;
+    justify-content: center;
+}
+body *{
+    font-family: Helvetica, serif;
+    font-size: medium;
+}
+body > .paragraph {
+    text-align: center;
+    font-size: x-large;
 }
 
 #parameters-form {
-    display: grid;
-    grid-template-columns:repeat(4, 1fr);
-    grid-template-rows: 1fr 0;
-    column-gap: 10px;
+    display: flex;
 
     margin: 5px;
-    padding: 5px;
-    border: 5px solid lightskyblue;
-    border-radius: 5px;
     background-color: whitesmoke;
-    filter: drop-shadow(0 0 3px darkgray);
+    border-radius: 5px;
+    filter: drop-shadow(0 0 3px gray)
 }
+
 #parameters-form .field {
     display: flex;
     flex-direction: column;
     align-items: center;
+
+    padding: 0 10px;
+    border-right: 1px solid lightgray;
+}
+#parameters-form .field > .paragraph {
+    margin: 0;
+    width: 100%;
+    text-align: center;
+    font-size: large;
+    padding: 10px 0;
+    border-bottom: 1px solid lightgray;
+}
+#parameters-form .field select{
+    align-self: start;
+
+    font-size: medium;
+    padding: 3px;
+    width: 100%;
+    border: 0;
+}
+#parameters-form .date {
+    margin: auto;
+}
+#parameters-form .field .checkboxes{
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+
+    width: 200px;
+    overflow-y: auto;
+}
+#parameters-form .field .checkbox,
+#parameters-form .field .radio-button{
+    margin: 0;
+    width: 100%;
 }
 
 #parameters-form .submit-button {
-    grid-column-start: 4;
-    justify-self: end;
+    align-self: end;
 
     font-size: large;
-    height: 30px;
-    border: 2px solid lightskyblue;
-    border-radius: 5px;
+    color: steelblue;
+    white-space: normal;
+    width: min-content;
+    margin: 5px;
+    /*border: 0;*/
+    /*border-radius: 5px;*/
+}
+
+/* COMMON */
+input, select{
+    cursor: pointer;
 }
