@@ -11,7 +11,7 @@ import org.springframework.web.servlet.ModelAndView
 class CorrespController(private var dao: Dao) {
 
     @GetMapping
-    fun index() = "html/index.html"
+    fun index() = "index.html"
 
     @GetMapping("/carriers")
     @ResponseBody

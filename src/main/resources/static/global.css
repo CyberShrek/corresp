@@ -1,0 +1,13 @@
+body {
+	display: grid;
+	grid-template-rows: 1fr 200px repeat(1fr);
+	justify-content: center;
+}
+body * {
+	font-family: Helvetica, serif;
+	font-size: medium;
+}
+
+.wrong {
+	outline: 2px solid red;
+}

@@ -1,6 +1,6 @@
 import {httpClient} from "../web/httpClient.js"
 
-document.body.insertAdjacentHTML("beforeend",`
+document.body.insertAdjacentHTML("beforeend", `
 <form id="parameters-form">
     <div name="period"      class="field"></div>
     <div name="carrier"     class="field"></div>
@@ -22,12 +22,23 @@ export const paramsForm = document.getElementById("parameters-form")
         <label class="checkbox"> <input type="checkbox"> Сравнение с прошлым годом </label>
     `)
     Object.defineProperties(paramsForm.period, {
-        date1     : {get(){ return getDateByName(1) }},
-        date2     : {get(){ return getDateByName(2) }},
-        daysCount : {get(){
-            return Math.abs(new Date(this.date1).getTime() - new Date(this.date2).getTime()) / (1000 * 3600 * 24)
-        }}
+        date1: {
+            get() {
+                return getDateByName(1)
+            }
+        },
+        date2: {
+            get() {
+                return getDateByName(2)
+            }
+        },
+        daysCount: {
+            get() {
+                return Math.abs(new Date(this.date1).getTime() - new Date(this.date2).getTime()) / (1000 * 3600 * 24)
+            }
+        }
     })
+
     function getDateByName(name) {
         return paramsForm.period.querySelector(`input[type=date][name='${name}']`).value
     }
@@ -48,9 +59,10 @@ export const paramsForm = document.getElementById("parameters-form")
 }
 // Departure and Destination fields
 {
-    paramsForm.departure   = defineField(paramsForm.querySelector(".field[name=departure]"),  "Объект отправления")
+    paramsForm.departure = defineField(paramsForm.querySelector(".field[name=departure]"), "Объект отправления")
     paramsForm.destination = defineField(paramsForm.querySelector(".field[name=destination]"), "Объект назначения")
-    function defineField(field, paragraphText){
+
+    function defineField(field, paragraphText) {
         field.insertAdjacentHTML("beforeend", `        
             <p class="paragraph"> ${paragraphText} </p>
             <select>
@@ -63,24 +75,33 @@ export const paramsForm = document.getElementById("parameters-form")
         `)
         field.select = field.querySelector("select")
         field.checkboxesSelect = field.querySelector(".checkboxes")
-        field.select.onchange=() => {
+        field.select.onchange = () => {
             removeCheckboxes()
-            switch (field.select.value){
-                case "Государство" : fillCheckboxes("countries"); break
-                case "Дорога"      : fillCheckboxes("railRoads"); break
-                case "Станция"     : fillCheckboxes("stations");  break
-                default : return
+            switch (field.select.value) {
+                case "Государство" :
+                    fillCheckboxes("countries");
+                    break
+                case "Дорога"      :
+                    fillCheckboxes("railRoads");
+                    break
+                case "Станция"     :
+                    fillCheckboxes("stations");
+                    break
+                default :
+                    return
             }
         }
-        function removeCheckboxes(){
+
+        function removeCheckboxes() {
             while (field.checkboxesSelect.hasChildNodes())
                 field.checkboxesSelect.firstChild.remove()
         }
-        function fillCheckboxes(optionsName){
+
+        function fillCheckboxes(optionsName) {
             httpClient.get(optionsName).then(options => {
                 for (const option of options) {
                     field.checkboxesSelect.insertAdjacentHTML("beforeend",
-                            `<label class="checkbox"><input type="checkbox" value="${option}"> ${option} </label>`)
+                        `<label class="checkbox"><input type="checkbox" value="${option}"> ${option} </label>`)
                 }
             })
         }
@@ -89,8 +110,7 @@ export const paramsForm = document.getElementById("parameters-form")
     }
 }
 
-paramsForm.querySelector("input[type=submit]").onclick=(event) => {
+paramsForm.querySelector("input[type=submit]").onclick = (event) => {
     event.preventDefault()
-
 }
 
