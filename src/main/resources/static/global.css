@@ -1,6 +1,6 @@
 body {
 	display: grid;
-	grid-template-rows: 1fr 200px repeat(1fr);
+	grid-template-rows: 1fr 200px;
 	justify-content: center;
 }
 body * {

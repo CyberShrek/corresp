@@ -1,22 +1,26 @@
-<!-- Draws an error popup exactly where the <Error> component was added-->
+<!-- Drops a floating div exactly where the <Notation> component was added-->
 
 <script>
     import { onMount } from "svelte"
     import { blur } from "svelte/transition"
 
-    export let message
+    export let message,
+        isError = false
+
+    let color = "white",
+        background = isError ? "red" : "lightskyblue"
 
     let elem, top, width
     onMount(() => {
         const prevElem = elem.previousElementSibling
-        top = prevElem.offsetTop + prevElem.clientHeight
-        width = elem.parentElement.clientWidth
+        top = prevElem.offsetTop + prevElem.clientHeight + "px"
+        width = elem.parentElement.clientWidth + "px"
     })
 </script>
 
 <p bind:this={elem}
    transition:blur
-   style="top: {top}px; width: {width}px">
+   style="top:{top}; width:{width}; color:{color}; background:{background}">
     {message}
 </p>
 
@@ -25,8 +29,6 @@
         position:absolute;
         margin:5px;
         text-align: center;
-        color:white;
-        background-color:red;
         border-radius: 5px;
     }
 </style>

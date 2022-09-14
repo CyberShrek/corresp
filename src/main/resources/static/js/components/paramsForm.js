@@ -22,18 +22,9 @@ export const paramsForm = document.getElementById("parameters-form")
         <label class="checkbox"> <input type="checkbox"> Сравнение с прошлым годом </label>
     `)
     Object.defineProperties(paramsForm.period, {
-        date1: {
-            get() {
-                return getDateByName(1)
-            }
-        },
-        date2: {
-            get() {
-                return getDateByName(2)
-            }
-        },
-        daysCount: {
-            get() {
+        date1: {get() {return getDateByName(1)}},
+        date2: {get() {return getDateByName(2)}},
+        daysCount: {get() {
                 return Math.abs(new Date(this.date1).getTime() - new Date(this.date2).getTime()) / (1000 * 3600 * 24)
             }
         }
@@ -78,17 +69,10 @@ export const paramsForm = document.getElementById("parameters-form")
         field.select.onchange = () => {
             removeCheckboxes()
             switch (field.select.value) {
-                case "Государство" :
-                    fillCheckboxes("countries");
-                    break
-                case "Дорога"      :
-                    fillCheckboxes("railRoads");
-                    break
-                case "Станция"     :
-                    fillCheckboxes("stations");
-                    break
-                default :
-                    return
+                case "Государство" :fillCheckboxes("countries");break
+                case "Дорога"      :fillCheckboxes("railRoads");break
+                case "Станция"     :fillCheckboxes("stations");break
+                default :return
             }
         }
 

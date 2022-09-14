@@ -1,5 +1,5 @@
 <script>
-    import ParamsForm from "./components/paramsForm/ParamsForm.svelte"
+    import ParamsForm from "./components/ParamsForm/ParamsForm.svelte"
 
 </script>
 
