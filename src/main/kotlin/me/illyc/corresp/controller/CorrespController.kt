@@ -2,10 +2,9 @@ package me.illyc.corresp.controller
 
 import me.illyc.corresp.dao.Dao
 import org.springframework.stereotype.Controller
-import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseBody
-import org.springframework.web.servlet.ModelAndView
 
 @Controller
 class CorrespController(private var dao: Dao) {
@@ -15,7 +14,9 @@ class CorrespController(private var dao: Dao) {
 
     @GetMapping("/carriers")
     @ResponseBody
-    fun getCarriers() = dao.carriers
+    fun getCarriers(@RequestParam date: String) : Set<String> {
+        return dao.getCarrierByDate(date)
+    }
 
     @GetMapping("/countries")
     @ResponseBody
@@ -25,7 +26,7 @@ class CorrespController(private var dao: Dao) {
     @ResponseBody
     fun getStations() = dao.stations
 
-    @GetMapping("/railRoads")
+    @GetMapping("/roads")
     @ResponseBody
-    fun getRailRoads() = dao.railRoads
+    fun getRailRoads() = dao.roads
 }

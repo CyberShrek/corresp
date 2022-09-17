@@ -4,31 +4,50 @@
     import { onMount } from "svelte"
     import { blur } from "svelte/transition"
 
-    export let message,
-        isError = false
+    export let text, type, size
 
-    let color = "white",
-        background = isError ? "red" : "lightskyblue"
+    $: background = type==="error"   ? "red"
+                  : type==="warning" ? "darkkhaki"
+                  : type==="button"  ? "darkseagreen"
+                  : "lightskyblue"
 
-    let elem, top, width
+    let render, top, left, width
+
     onMount(() => {
-        const prevElem = elem.previousElementSibling
-        top = prevElem.offsetTop + prevElem.clientHeight + "px"
-        width = elem.parentElement.clientWidth + "px"
+        let nearestElem = render.previousElementSibling
+        if (!nearestElem) nearestElem = render.parentElement
+        top   = nearestElem.offsetTop + nearestElem.clientHeight + "px"
+        left  = nearestElem.offsetLeft - nearestElem.clientLeft + "px"
+        width = nearestElem.clientWidth + "px"
     })
 </script>
 
-<p bind:this={elem}
-   transition:blur
-   style="top:{top}; width:{width}; color:{color}; background:{background}">
-    {message}
-</p>
+<div bind:this={render}
+     style="top:{top}; left:{left}; width:{width}; font-size:{size}">
+    {#if type==="button"}
+        <input type="button"
+               transition:blur
+               style="background:{background}"
+               value={text}/>
+    {:else}
+        <p transition:blur
+           style="background:{background}">
+            {text}
+        </p>
+    {/if}
+</div>
+
 
 <style>
-    p {
+    div{
+        display: flex;
         position:absolute;
-        margin:5px;
+        margin: 5px;
+    }
+    p, input[type=button] {
         text-align: center;
+        color: white;
         border-radius: 5px;
+        box-shadow: 0 0 3px gray;
     }
 </style>

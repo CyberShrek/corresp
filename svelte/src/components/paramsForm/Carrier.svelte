@@ -1,0 +1,43 @@
+<script>
+    import Heading from "./parts/Heading.svelte"
+    import {httpClient} from "../../web/httpClient"
+    import Dropdown from "../common/Dropdown.svelte"
+    import Select from "./parts/Select.svelte"
+
+    export let inputDate, isValid
+    export const params = { value: undefined }
+
+    $: isValid = params.value !== undefined && params.value !== "-"
+
+    let carriers = {}
+    const setCarriers=(arg) => carriers = arg
+
+    let dropdown = {}
+    const setDropdown=(text, type) => dropdown = {text, type}
+</script>
+
+<Heading text="Перевозчик"/>
+<Select bind:value={params.value}>
+    <option> - </option>
+    {#each carriers as carrier (carrier)}
+        <option>{carrier}</option>
+    {/each}
+
+    {#if inputDate}
+        {#await httpClient.getCarriersByDate(inputDate)}{ setDropdown("Загружаю список перевозчиков") }
+        {:then carriers}                                { setDropdown(false) }
+            {#if carriers.length > 0}
+                { setCarriers(carriers)}
+            {:else}
+                { setDropdown("Не найдено перевозчиков за указанный период", "warning") }
+            {/if}
+        {:catch error}
+            { setDropdown("Не удалось загрузить данные", "error") }
+        {/await}
+    {/if}
+
+</Select>
+
+{#if dropdown.message}
+    <Dropdown {...dropdown}/>
+{/if}

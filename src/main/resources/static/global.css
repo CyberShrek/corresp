@@ -3,11 +3,30 @@ body {
 	grid-template-rows: 1fr 200px;
 	justify-content: center;
 }
-body * {
+* {
 	font-family: Helvetica, serif;
 	font-size: medium;
+	transition: 0.1s;
+}
+p{
+	cursor: default;
 }
 
+input{
+	cursor: pointer;
+	padding: 5px;
+	margin: 5px;
+	border: thin solid gray;
+	border-radius: 3px;
+}
+input[type=date]{
+	cursor: text;
+	width: 120px;
+	text-align: center;
+}
+input[type=button]:hover { filter: contrast(75%) }
+input[type=button]:active{ filter: contrast(50%) }
+
 .wrong {
-	outline: 2px solid red;
+	outline: 3px solid red;
 }
