@@ -4,10 +4,7 @@ import Select from "./parts/Select.svelte";
 import {httpClient} from "../../web/httpClient";
 import Dropdown from "../common/Dropdown.svelte";
 
-export let headingText, isValid
-
-let type, values = []
-export const params = { type, values }
+export let headingText, type, values = [], isValid
 
 $: isValid = values && values.length > 0
 

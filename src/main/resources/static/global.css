@@ -1,3 +1,8 @@
+:root{
+	--border: thin solid lightgray;
+	--shadow: 0 0 5px darkgray;
+}
+
 body {
 	display: grid;
 	grid-template-rows: 1fr 200px;
@@ -24,9 +29,12 @@ input[type=date]{
 	width: 120px;
 	text-align: center;
 }
-input[type=button]:hover { filter: contrast(75%) }
-input[type=button]:active{ filter: contrast(50%) }
 
-.wrong {
-	outline: 3px solid red;
+input[type=button]:hover,  input[type=submit]:hover { filter: contrast(75%) }
+input[type=button]:active, input[type=submit]:active{ filter: contrast(50%) }
+
+.wrong { outline: 3px solid red }
+.unavailable {
+	z-index: -1;
+	filter: grayscale(0.5) opacity(0.5);
 }

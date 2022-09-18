@@ -1,52 +1,46 @@
-<!-- Drops a floating div exactly where the <Notation> component was added-->
+<!-- Drops a floating notation exactly where the <Notation> component was added-->
 
 <script>
     import { onMount } from "svelte"
-    import { blur } from "svelte/transition"
+    import { blur, slide } from "svelte/transition"
 
     export let text, type, size
 
     $: background = type==="error"   ? "red"
                   : type==="warning" ? "darkkhaki"
-                  : type==="button"  ? "darkseagreen"
                   : "lightskyblue"
 
-    let render, top, left, width
+    let render, top, width
 
     onMount(() => {
-        let nearestElem = render.previousElementSibling
-        if (!nearestElem) nearestElem = render.parentElement
+        let nearestElem = render.previousElementSibling,
+            parentElem = render.parentElement
+        if (!nearestElem) nearestElem = parentElem
         top   = nearestElem.offsetTop + nearestElem.clientHeight + "px"
-        left  = nearestElem.offsetLeft - nearestElem.clientLeft + "px"
-        width = nearestElem.clientWidth + "px"
+        width = parentElem.clientWidth - 10 + "px"
     })
 </script>
 
-<div bind:this={render}
-     style="top:{top}; left:{left}; width:{width}; font-size:{size}">
     {#if type==="button"}
         <input type="button"
-               transition:blur
-               style="background:{background}"
+               bind:this={render}
+               transition:slide
+               style="top:{top}; width:{width}; font-size:{size}"
                value={text}/>
     {:else}
-        <p transition:blur
-           style="background:{background}">
+        <p bind:this={render}
+           transition:blur
+           style="background:{background}; color: white; top:{top}; width:{width}; font-size:{size}">
             {text}
         </p>
     {/if}
-</div>
 
 
 <style>
-    div{
-        display: flex;
+    p, input[type=button] {
         position:absolute;
         margin: 5px;
-    }
-    p, input[type=button] {
         text-align: center;
-        color: white;
         border-radius: 5px;
         box-shadow: 0 0 3px gray;
     }

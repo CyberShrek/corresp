@@ -8,11 +8,11 @@
 
 <style>
     select {
-        /*align-self: start;*/
-
         font-size: medium;
         padding: 3px;
         width: 100%;
-        border: 0;
+        background: white;
+        border: none;
+        border-bottom: var(--border);
     }
 </style>

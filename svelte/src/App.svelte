@@ -3,12 +3,12 @@
 
 </script>
 
-<h2> Анализ корреспонденций пассажиропотоков </h2>
+<p> Анализ корреспонденций пассажиропотоков </p>
 
 <ParamsForm/>
 
 <style>
-    h2 {
+    p {
         text-align: center;
         font-size: x-large;
     }

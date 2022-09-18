@@ -11,6 +11,6 @@
         text-align: center;
         font-size: large;
         padding: 10px 0;
-        border-bottom: 1px solid lightgray;
+        border-bottom: var(--border);
     }
 </style>

@@ -2,45 +2,50 @@
     import Period from "./Period.svelte"
     import Carrier from "./Carrier.svelte"
     import Depstinature from "./Depstinature.svelte"
-    import Dropdown from "../common/Dropdown.svelte";
 
-    let period = {}, carrier = {}, departure = {}, destination = {},
-        periodValid, carrierValid, departureValid, destinationValid
+    let period = {}, carrier = {}, departure = {}, destination = {}
 
-    $: allIsValid = periodValid && carrierValid && departureValid && destinationValid
+    $: allIsValid = period.isValid && carrier.isValid && departure.isValid && destination.isValid
 
+    let width
 </script>
 
-<form>
-    <period class="field"> <Period bind:params={period}
-                                   bind:isValid={periodValid} /> </period>
+<form bind:clientWidth={width}>
+    <period class="field"> <Period bind:date1={period.date1}
+                                   bind:date2={period.date2}
+                                   bind:compareWithLastYear={period.compareWithLastYear}
+                                   bind:isValid={period.isValid}/> </period>
 
     <carrier class="field"> <Carrier inputDate={period.date1}
-                                     bind:params={carrier}
-                                     bind:isValid={carrierValid}/> </carrier>
+                                     bind:value={carrier.value}
+                                     bind:isValid={carrier.isValid}/> </carrier>
 
     <departure class="field"> <Depstinature headingText="Объект отправления"
-                                            bind:params={departure}
-                                            bind:isValid={departureValid}/> </departure>
+                                            bind:type={departure.type}
+                                            bind:values={departure.values}
+                                            bind:isValid={departure.isValid}/> </departure>
 
     <destination class="field"> <Depstinature headingText="Объект назначения"
-                                              bind:params={destination}
-                                              bind:isValid={destinationValid}/> </destination>
-
+                                              bind:type={destination.type}
+                                              bind:values={destination.values}
+                                              bind:isValid={destination.isValid}/> </destination>
 </form>
-<!--{#if allIsValid}-->
-<Dropdown text="Сформировать отчёт" type="button" size="large"/>
-<!--{/if}-->
+
+<p> {departure.values}</p>
+<input type="submit"
+       value="Сформировать отчёт"
+       style="width: {width}"
+       class:unavailable={!allIsValid}
+/>
 
 <style>
     form {
         display: flex;
-
         margin: 5px;
         background-color: whitesmoke;
         border-radius: 5px;
-        border: 1px solid lightgray;
-        box-shadow: 0 0 3px gray
+        border: var(--border);
+        box-shadow: var(--shadow);
     }
     form > .field {
         display: flex;
@@ -51,6 +56,15 @@
         padding: 0 10px;
     }
     form > period, form > carrier, form > departure {
-        border-right: 1px solid lightgray;
+        border-right: var(--border);
+    }
+
+    input[type=submit]{
+        background: darkseagreen;
+        color: white;
+        font-size: x-large;
+        border-radius: 5px;
+        border: var(--border);
+        box-shadow: var(--shadow);
     }
 </style>

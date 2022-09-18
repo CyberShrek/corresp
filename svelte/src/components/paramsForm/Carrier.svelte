@@ -4,10 +4,9 @@
     import Dropdown from "../common/Dropdown.svelte"
     import Select from "./parts/Select.svelte"
 
-    export let inputDate, isValid
-    export const params = { value: undefined }
+    export let inputDate, value, isValid
 
-    $: isValid = params.value !== undefined && params.value !== "-"
+    $: isValid = value !== undefined && value !== "-"
 
     let carriers = {}
     const setCarriers=(arg) => carriers = arg
@@ -17,8 +16,8 @@
 </script>
 
 <Heading text="Перевозчик"/>
-<Select bind:value={params.value}>
-    <option> - </option>
+<Select bind:value={value}>
+    <option>-</option>
     {#each carriers as carrier (carrier)}
         <option>{carrier}</option>
     {/each}
