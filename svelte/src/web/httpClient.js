@@ -11,8 +11,8 @@ httpClient.get = (resourse) => fetch(resourse)
 
 httpClient.getCarriersByDate=(date) => httpClient.get(`carriers?date=${date}`)
 
-httpClient.getCountries=() => httpClient.get("countries")
+httpClient.getCountriesByDate=(date) => httpClient.get(`countries?date=${date}`)
 
-httpClient.getStations=() => httpClient.get("stations")
+httpClient.getStationsByDate=(date) => httpClient.get(`stations?date=${date}`)
 
-httpClient.getRoads=() => httpClient.get("roads")
+httpClient.getRoadsByDate=(date) => httpClient.get(`roads?date=${date}`)

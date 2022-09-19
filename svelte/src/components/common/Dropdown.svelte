@@ -41,6 +41,7 @@
         position:absolute;
         margin: 5px;
         text-align: center;
+        white-space: normal;
         border-radius: 5px;
         box-shadow: 0 0 3px gray;
     }

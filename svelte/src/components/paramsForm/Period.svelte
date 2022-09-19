@@ -27,3 +27,9 @@
 {/if}
 
 <label> <input type="checkbox" bind:checked={compareWithLastYear}> Сравнить с прошлым годом </label>
+
+<style>
+    input {
+        margin: auto;
+    }
+</style>

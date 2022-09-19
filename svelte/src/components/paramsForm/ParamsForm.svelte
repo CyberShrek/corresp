@@ -21,17 +21,17 @@
                                      bind:isValid={carrier.isValid}/> </carrier>
 
     <departure class="field"> <Depstinature headingText="Объект отправления"
+                                            inputDate={period.date1}
                                             bind:type={departure.type}
                                             bind:values={departure.values}
                                             bind:isValid={departure.isValid}/> </departure>
 
     <destination class="field"> <Depstinature headingText="Объект назначения"
+                                              inputDate={period.date1}
                                               bind:type={destination.type}
                                               bind:values={destination.values}
                                               bind:isValid={destination.isValid}/> </destination>
 </form>
-
-<p> {departure.values}</p>
 <input type="submit"
        value="Сформировать отчёт"
        style="width: {width}"
@@ -52,8 +52,11 @@
         flex-direction: column;
         align-items: center;
 
-        width: 180px;
+        min-width: 180px;
         padding: 0 10px;
+    }
+    form > period{
+        justify-content: space-between;
     }
     form > period, form > carrier, form > departure {
         border-right: var(--border);

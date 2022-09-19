@@ -25,18 +25,16 @@
     {#if inputDate}
         {#await httpClient.getCarriersByDate(inputDate)}{ setDropdown("Загружаю список перевозчиков") }
         {:then carriers}                                { setDropdown(false) }
-            {#if carriers.length > 0}
-                { setCarriers(carriers)}
-            {:else}
+            {#if carriers.length === 0}
                 { setDropdown("Не найдено перевозчиков за указанный период", "warning") }
             {/if}
+            { setCarriers(carriers) }
         {:catch error}
             { setDropdown("Не удалось загрузить данные", "error") }
         {/await}
     {/if}
-
 </Select>
 
-{#if dropdown.message}
+{#if dropdown.text}
     <Dropdown {...dropdown}/>
 {/if}
