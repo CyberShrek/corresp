@@ -9,10 +9,15 @@ httpClient.get = (resourse) => fetch(resourse)
         else throw new Error(response)
     })
 
-httpClient.getCarriersByDate=(date) => httpClient.get(`carriers?date=${date}`)
+httpClient.getCarriersByDate=(date) => httpClient
+    .get(`carriers?date=${date}`)
 
-httpClient.getCountriesByDate=(date) => httpClient.get(`countries?date=${date}`)
+httpClient.getCountriesByDate=(date) => httpClient
+    .get(`countries?date=${date}`)
 
-httpClient.getStationsByDate=(date) => httpClient.get(`stations?date=${date}`)
+httpClient.getRoadsByDateAndCountryCodes=(date, countryCodes) => httpClient
+    .get(`roads?date=${date}&countryCodes=${countryCodes}`)
 
-httpClient.getRoadsByDate=(date) => httpClient.get(`roads?date=${date}`)
+httpClient.getStationsByDateAndRoadCodes=(date, roadCodes) => httpClient
+    .get(`stations?date=${date}&roadCodes=${roadCodes}`)
+

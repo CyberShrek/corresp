@@ -20,11 +20,13 @@ class CorrespController(private var dao: Dao) {
     @ResponseBody
     fun getCountries(@RequestParam date: String) = dao.getCountriesByDate(date)
 
-    @GetMapping("/stations")
-    @ResponseBody
-    fun getStations(@RequestParam date: String) = dao.getStationsByDate(date)
-
     @GetMapping("/roads")
     @ResponseBody
-    fun getRailRoads(@RequestParam date: String) = dao.getRoadsByDate(date)
+    fun getRoads(@RequestParam date: String,
+                 @RequestParam countryCodes: Set<Int>) = dao.getRoadsByDateAndCountryCodes(date, countryCodes)
+
+    @GetMapping("/stations")
+    @ResponseBody
+    fun getStations(@RequestParam date: String,
+                    @RequestParam roadCodes: Set<String>) = dao.getStationsByDateAndRoadCodes(date, roadCodes)
 }

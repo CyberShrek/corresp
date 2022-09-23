@@ -2,7 +2,6 @@
     import Heading from "./parts/Heading.svelte"
     import {httpClient} from "../../web/httpClient"
     import Dropdown from "../common/Dropdown.svelte"
-    import Select from "./parts/Select.svelte"
 
     export let inputDate, value, isValid
 
@@ -16,7 +15,7 @@
 </script>
 
 <Heading text="Перевозчик"/>
-<Select bind:value={value}>
+<select bind:value={value}>
     <option>-</option>
     {#each carriers as carrier (carrier)}
         <option>{carrier}</option>
@@ -33,7 +32,7 @@
             { setDropdown("Не удалось загрузить данные", "error") }
         {/await}
     {/if}
-</Select>
+</select>
 
 {#if dropdown.text}
     <Dropdown {...dropdown}/>

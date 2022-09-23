@@ -2,44 +2,44 @@
     import Period from "./Period.svelte"
     import Carrier from "./Carrier.svelte"
     import Depstinature from "./Depstinature.svelte"
+    import {createEventDispatcher} from "svelte"
+    const dispatch = createEventDispatcher()
 
     let period = {}, carrier = {}, departure = {}, destination = {}
 
-    $: allIsValid = period.isValid && carrier.isValid && departure.isValid && destination.isValid
-
     let width
 </script>
-
-<form bind:clientWidth={width}>
+<form bind:offsetWidth={width}>
     <period class="field"> <Period bind:date1={period.date1}
                                    bind:date2={period.date2}
                                    bind:compareWithLastYear={period.compareWithLastYear}
                                    bind:isValid={period.isValid}/> </period>
 
     <carrier class="field"> <Carrier inputDate={period.date1}
-                                     bind:value={carrier.value}
+                                     bind:selected={carrier.selected}
                                      bind:isValid={carrier.isValid}/> </carrier>
 
-    <departure class="field"> <Depstinature headingText="Объект отправления"
+    <departure class="field"> <Depstinature headingText="Отправления"
                                             inputDate={period.date1}
                                             bind:type={departure.type}
                                             bind:values={departure.values}
                                             bind:isValid={departure.isValid}/> </departure>
 
-    <destination class="field"> <Depstinature headingText="Объект назначения"
+    <destination class="field"> <Depstinature headingText="Назначения"
                                               inputDate={period.date1}
                                               bind:type={destination.type}
                                               bind:values={destination.values}
                                               bind:isValid={destination.isValid}/> </destination>
 </form>
+
 <input type="submit"
-       value="Сформировать отчёт"
-       style="width: {width}"
-       class:unavailable={!allIsValid}
-/>
+       class:unavailable={!(period.isValid && carrier.isValid && departure.isValid && destination.isValid)}
+       on:click|preventDefault={() => dispatch("generateReport", {period, carrier, departure, destination})}
+       value="Сформировать отчёт" style="width: {width}px"/>
 
 <style>
     form {
+        justify-self: center;
         display: flex;
         margin: 5px;
         background-color: whitesmoke;
@@ -63,9 +63,11 @@
     }
 
     input[type=submit]{
-        background: darkseagreen;
-        color: white;
+        display: block;
+        justify-self: center;
         font-size: x-large;
+        color: white;
+        background: darkseagreen;
         border-radius: 5px;
         border: var(--border);
         box-shadow: var(--shadow);

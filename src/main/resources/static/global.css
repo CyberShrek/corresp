@@ -6,7 +6,6 @@
 body {
 	display: grid;
 	grid-template-rows: 1fr 200px;
-	justify-content: center;
 }
 * {
 	font-family: Helvetica, serif;
@@ -17,18 +16,16 @@ p{
 	cursor: default;
 }
 
-input{
-	cursor: pointer;
+input, select{
 	padding: 5px;
 	margin: 5px;
+}
+input, select, .input{
+	cursor: pointer;
 	border: thin solid gray;
 	border-radius: 3px;
 }
-input[type=date]{
-	cursor: text;
-	width: 120px;
-	text-align: center;
-}
+input[type=date], input[type=text]{ cursor: text; }
 
 input[type=button]:hover,  input[type=submit]:hover { filter: contrast(75%) }
 input[type=button]:active, input[type=submit]:active{ filter: contrast(50%) }

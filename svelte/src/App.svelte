@@ -1,11 +1,26 @@
 <script>
     import ParamsForm from "./components/ParamsForm/ParamsForm.svelte"
+    import Report1 from "./components/report1/Report1.svelte"
+    import {httpClient} from "./web/httpClient";
 
+    function generateReport1(event) {
+        const detail = event.detail,
+            period = detail.period,
+            carrier = detail.carrier,
+            departure = detail.departure,
+            destination = detail.destination
+
+        alert(period.date1)
+    }
 </script>
 
 <p> Анализ корреспонденций пассажиропотоков </p>
 
-<ParamsForm/>
+<ParamsForm on:generateReport={generateReport1}/>
+
+{#if generateReport1}
+    <Report1 />
+{/if}
 
 <style>
     p {
