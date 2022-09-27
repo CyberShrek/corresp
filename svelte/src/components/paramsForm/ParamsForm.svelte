@@ -10,26 +10,36 @@
     let width
 </script>
 <form bind:offsetWidth={width}>
-    <period class="field"> <Period bind:date1={period.date1}
-                                   bind:date2={period.date2}
-                                   bind:compareWithLastYear={period.compareWithLastYear}
-                                   bind:isValid={period.isValid}/> </period>
+    <period class="field">
+        <p> Период </p>
+        <div><Period bind:date1={period.date1}
+                     bind:date2={period.date2}
+                     bind:compareWithLastYear={period.compareWithLastYear}
+                     bind:isValid={period.isValid}/>
+        </div></period>
 
-    <carrier class="field"> <Carrier inputDate={period.date1}
-                                     bind:selected={carrier.selected}
-                                     bind:isValid={carrier.isValid}/> </carrier>
+    <carrier class="field">
+        <p> Перевозчик </p>
+        <div><Carrier inputDate={period.date1}
+                      bind:selected={carrier.selected}
+                      bind:isValid={carrier.isValid}/>
+        </div></carrier>
 
-    <departure class="field"> <Depstinature headingText="Отправления"
-                                            inputDate={period.date1}
-                                            bind:type={departure.type}
-                                            bind:values={departure.values}
-                                            bind:isValid={departure.isValid}/> </departure>
+    <departure class="field">
+        <p> Отправления </p>
+        <div><Depstinature inputDate={period.date1}
+                           bind:type={departure.type}
+                           bind:selected={departure.selected}
+                           bind:isValid={departure.isValid}/>
+        </div></departure>
 
-    <destination class="field"> <Depstinature headingText="Назначения"
-                                              inputDate={period.date1}
-                                              bind:type={destination.type}
-                                              bind:values={destination.values}
-                                              bind:isValid={destination.isValid}/> </destination>
+    <destination class="field">
+        <p> Назначения </p>
+        <div><Depstinature inputDate={period.date1}
+                           bind:type={destination.type}
+                           bind:selected={destination.selected}
+                           bind:isValid={destination.isValid}/>
+        </div></destination>
 </form>
 
 <input type="submit"
@@ -47,20 +57,34 @@
         border: var(--border);
         box-shadow: var(--shadow);
     }
+
     form > .field {
         display: flex;
         flex-direction: column;
-        align-items: center;
-
         min-width: 180px;
+        max-width: 25vw;
         padding: 0 10px;
     }
-    form > period{
-        justify-content: space-between;
+
+    form > .field > p {
+        justify-self: start;
+        margin: 0;
+        width: 100%;
+        text-align: center;
+        font-size: large;
+        padding: 10px 0;
+        border-bottom: var(--border);
     }
-    form > period, form > carrier, form > departure {
-        border-right: var(--border);
+
+    form > .field > div {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        align-items: center;
+        height: 100%;
     }
+
+    form > period, form > carrier, form > departure { border-right: var(--border) }
 
     input[type=submit]{
         display: block;

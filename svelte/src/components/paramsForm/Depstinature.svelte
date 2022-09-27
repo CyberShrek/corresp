@@ -1,57 +1,75 @@
 <script>
-import Heading from "./parts/Heading.svelte"
 import {httpClient} from "../../web/httpClient"
 import Dropdown from "../common/Dropdown.svelte"
 import MultiSelect from "../common/MultiSelect.svelte"
+import {afterUpdate} from "svelte"
 
+export let headingText, inputDate, type, selected, isValid
 
+let countries = [], selectedCountryNames = [],
+    roads     = [], selectedRoadNames    = [],
+    stations  = [], selectedStationNames = []
+$: selectedCountries = selectedCountryNames.map(name => countries.find(desired => desired.name === name))
+$: selectedRoads     = selectedRoadNames   .map(name => roads    .find(desired => desired.name === name))
+$: selectedStations  = selectedStationNames.map(name => stations .find(desired => desired.name === name))
 
-export let headingText, inputDate, type, selected = [], isValid
+$: countriesPromise = inputDate ?
+    httpClient.getCountriesByDate(inputDate)
+        .then(r => countries = r) : countries = selectedCountryNames = []
 
-$: isValid = selected && selected.length > 0
+$: roadsPromise = selectedCountries.length > 0 ?
+    httpClient.getRoadsByDateAndCountryCodes(inputDate, selectedCountries.map(desired => desired.code))
+        .then(r => roads = r) : roads = selectedRoadNames = []
 
-let types = [{name:"Государство"}, {name:"Дорога"}, {name:"Станция"}]
+$: stationsPromise = selectedRoads.length > 0 ?
+    httpClient.getStationsByDateAndRoadCodes(inputDate, selectedRoads.map(desired => desired.code))
+        .then(r => stations = r) : stations = selectedStationNames = []
+
+$: type = selectedStations  ? "s" :
+          selectedRoads     ? "r" :
+          selectedCountries ? "c" : ""
+
+$: selected = selectedStations  ? selectedStations :
+              selectedRoads     ? selectedRoads    :
+              selectedCountries ? selectedCountries : []
+
+afterUpdate(() => {
+    if (selectedStations.length > 0)  { type = "s"; selected = selectedStations }
+    else
+    if (selectedRoads.length > 0)     { type = "r"; selected = selectedRoads }
+    else
+    if (selectedCountries.length > 0) { type = "c"; selected = selectedCountries }
+    else
+        type = selected = undefined
+})
+
+$: isValid = type && selected && selected.length > 0
 
 </script>
 
-<Heading text={headingText}/>
+<!-- COUNTRIES -->
+<MultiSelect placeholder="Государства"
+             options={countries.map(country => country.name)}
+             bind:selectedOptions={selectedCountryNames}/>
 
+{#await countriesPromise} <Dropdown text="Загружаю список государств"/>
+{:catch error}            <Dropdown text="Не удалось загрузить список государств" type="error"/>
+{/await}
 
-<MultiSelect bind:selected options={types} />
-<MultiSelect bind:selected options={types} />
-<MultiSelect bind:selected options={types} />
-<!--<Select bind:value={type}>-->
-<!--    <option>-</option>-->
-<!--    <option>Государство</option>-->
-<!--    <option>Дорога</option>-->
-<!--    <option>Станция</option>-->
-<!--</Select>-->
+<!-- ROADS -->
+<MultiSelect placeholder="Дороги"
+             options={roads.map(road => road.name)}
+             bind:selectedOptions={selectedRoadNames}/>
 
-<!--<div>-->
-<!--    {#await response}-->
-<!--        <Dropdown text="Загружаю список объектов"/>-->
-<!--    {:then entities}-->
-<!--        {#if entities}-->
-<!--        {#each entities as entity}-->
-<!--            <label> <input type="checkbox"-->
-<!--                           bind:group={selected}-->
-<!--                           name={headingText.replace(" ", "-")}-->
-<!--                           value={entity.code}/> {entity.value} </label>-->
-<!--        {/each}-->
-<!--        {/if}-->
-<!--    {:catch error}-->
-<!--        <Dropdown text="Не удалось загрузить данные" type="error"/>-->
-<!--    {/await}-->
-<!--</div>-->
+{#await roadsPromise} <Dropdown text="Загружаю список дорог"/>
+{:catch error}        <Dropdown text="Не удалось загрузить список дорог" type="error"/>
+{/await}
 
-<style>
-div {
-    display: flex;
-    flex-direction: column;
-    align-items: start;
+<!-- STATIONS -->
+<MultiSelect placeholder="Станции"
+             options={stations.map(station => station.name)}
+             bind:selectedOptions={selectedStationNames}/>
 
-    white-space: nowrap;
-    width: 100%;
-    overflow: auto;
-}
-</style>
+{#await stationsPromise} <Dropdown text="Загружаю список станций"/>
+{:catch error}           <Dropdown text="Не удалось загрузить список станций" type="error"/>
+{/await}

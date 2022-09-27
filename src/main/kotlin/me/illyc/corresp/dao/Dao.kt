@@ -8,19 +8,16 @@ import javax.annotation.PostConstruct
 @Repository
 class Dao (val template: JdbcTemplate) {
 
-    val nameMapper = RowMapper<String>{ rowSet, _ -> rowSet.getString(1) }
-
     val nameAndCodeMapper = RowMapper<Any>{ rowSet, _ -> object {
-        val name  = rowSet.getString("name")
+        val name = rowSet.getString("name")
         val code = rowSet.getString("code")
     }}
 
     fun getCarriersByDate(date: String) = template.query("""
-        SELECT DISTINCT nazvd AS name 
+        SELECT DISTINCT nazvd AS name, '' as code
         FROM nsi.sobper 
-        WHERE '$date' between datano and datako 
-        ORDER BY name
-        """, nameMapper)
+        WHERE '$date' between datano and datako
+        """, nameAndCodeMapper)
         .toSet()
 
     fun getCountriesByDate(date: String) = template.query("""
@@ -53,7 +50,11 @@ class Dao (val template: JdbcTemplate) {
         FROM (
              SELECT DISTINCT pnazv, stan
              FROM nsi.stanv
-             WHERE array_position(Array ${roadCodes.map{code -> "'$code'::char"}}, dor) IS NOT NULL
+             WHERE array_position(Array ${roadCodes.map{
+            code -> when(code){
+                 "'" -> "'\$code'::char"
+                 else -> "'$code'::char"}}
+             }, dor) IS NOT NULL
              AND '$date' between datand and datakd
              AND '$date' between datani and dataki
          ) as s

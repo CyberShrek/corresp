@@ -38,8 +38,10 @@
 
 <style>
     p, input[type=button] {
+        z-index: 10;
         position:absolute;
         margin: 5px;
+        opacity: 0.8;
         text-align: center;
         white-space: normal;
         border-radius: 5px;

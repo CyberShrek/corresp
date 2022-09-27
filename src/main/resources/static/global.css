@@ -5,7 +5,6 @@
 
 body {
 	display: grid;
-	grid-template-rows: 1fr 200px;
 }
 * {
 	font-family: Helvetica, serif;
@@ -32,6 +31,7 @@ input[type=button]:active, input[type=submit]:active{ filter: contrast(50%) }
 
 .wrong { outline: 3px solid red }
 .unavailable {
-	z-index: -1;
+	pointer-events: none;
+	user-select: none;
 	filter: grayscale(0.5) opacity(0.5);
 }

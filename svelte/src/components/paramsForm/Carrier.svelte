@@ -1,39 +1,27 @@
 <script>
-    import Heading from "./parts/Heading.svelte"
     import {httpClient} from "../../web/httpClient"
     import Dropdown from "../common/Dropdown.svelte"
+    import MultiSelect from "../common/MultiSelect.svelte"
 
-    export let inputDate, value, isValid
+    export let inputDate, selected, isValid
 
-    $: isValid = value !== undefined && value !== "-"
+    let carriers = [], selectedCarrierNames = []
 
-    let carriers = {}
-    const setCarriers=(arg) => carriers = arg
+    $: carriersPromise = inputDate ?
+        httpClient.getCarriersByDate(inputDate)
+            .then(r => carriers = r) : carriers = selectedCarrierNames = []
 
-    let dropdown = {}
-    const setDropdown=(text, type) => dropdown = {text, type}
+    $: selected = selectedCarrierNames.map(name => carriers.find(desired => desired.name === name))[0]
+
+    $: isValid = selected !== undefined
+
 </script>
 
-<Heading text="Перевозчик"/>
-<select bind:value={value}>
-    <option>-</option>
-    {#each carriers as carrier (carrier)}
-        <option>{carrier}</option>
-    {/each}
+<MultiSelect options={carriers.map(carrier => carrier.name)}
+             placeholder="Перевозчик"
+             bind:selectedOptions={selectedCarrierNames}
+             singleSelect={true}/>
 
-    {#if inputDate}
-        {#await httpClient.getCarriersByDate(inputDate)}{ setDropdown("Загружаю список перевозчиков") }
-        {:then carriers}                                { setDropdown(false) }
-            {#if carriers.length === 0}
-                { setDropdown("Не найдено перевозчиков за указанный период", "warning") }
-            {/if}
-            { setCarriers(carriers) }
-        {:catch error}
-            { setDropdown("Не удалось загрузить данные", "error") }
-        {/await}
-    {/if}
-</select>
-
-{#if dropdown.text}
-    <Dropdown {...dropdown}/>
-{/if}
+    {#await carriersPromise} <Dropdown text="Загружаю список перевозчиков"/>
+    {:catch error}           <Dropdown text="Ошибка загрузки списка перевозчиков" type="error"/>
+    {/await}

@@ -1,8 +1,5 @@
 <script>
-    import Heading from "./parts/Heading.svelte"
     import Dropdown from "../common/Dropdown.svelte"
-    import {createEventDispatcher} from "svelte"
-    const dispatch = createEventDispatcher()
 
     export let
         date1 = new Date().toJSON().slice(0, 10),
@@ -18,9 +15,7 @@
 
 </script>
 
-<Heading text="Период"/>
-<label> От: <input type="date" bind:value={date1} class:wrong={!date1 || !isValid && date2}
-                   on:change={() => dispatch("date1changed")}> </label>
+<label> От: <input type="date" bind:value={date1} class:wrong={!date1 || !isValid && date2}> </label>
 <label> До: <input type="date" bind:value={date2} class:wrong={!date2 || !isValid && date1}> </label>
 
 {#if daysCount > 62}
@@ -30,9 +25,3 @@
 {/if}
 
 <label> <input type="checkbox" bind:checked={compareWithLastYear}> Сравнить с прошлым годом </label>
-
-<style>
-    input {
-        margin: auto;
-    }
-</style>
