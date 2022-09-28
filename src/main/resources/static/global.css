@@ -1,6 +1,7 @@
 :root{
 	--border: thin solid lightgray;
-	--shadow: 0 0 5px darkgray;
+	--border-radius: 5px;
+	--shadow: 0 2px 5px darkgray;
 }
 
 body {
@@ -22,7 +23,7 @@ input, select{
 input, select, .input{
 	cursor: pointer;
 	border: thin solid gray;
-	border-radius: 3px;
+	border-radius: var(--border-radius);
 }
 input[type=date], input[type=text]{ cursor: text; }
 

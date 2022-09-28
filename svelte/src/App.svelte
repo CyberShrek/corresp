@@ -1,6 +1,6 @@
 <script>
     import ParamsForm from "./components/ParamsForm/ParamsForm.svelte"
-    import Report1 from "./components/report1/Report1.svelte"
+    import Report1 from "./components/reports/Report1.svelte"
     import {httpClient} from "./web/httpClient";
 
     function generateReport1(event) {
@@ -14,7 +14,6 @@
     }
 
 </script>
-
 <p> Анализ корреспонденций пассажиропотоков </p>
 
 <ParamsForm on:generateReport={generateReport1}/>

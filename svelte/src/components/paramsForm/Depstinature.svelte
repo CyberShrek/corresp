@@ -4,7 +4,7 @@ import Dropdown from "../common/Dropdown.svelte"
 import MultiSelect from "../common/MultiSelect.svelte"
 import {afterUpdate} from "svelte"
 
-export let headingText, inputDate, type, selected, isValid
+export let inputDate, type, selected, isValid
 
 let countries = [], selectedCountryNames = [],
     roads     = [], selectedRoadNames    = [],

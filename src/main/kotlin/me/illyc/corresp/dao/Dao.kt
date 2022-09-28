@@ -48,16 +48,16 @@ class Dao (val template: JdbcTemplate) {
     fun getStationsByDateAndRoadCodes(date: String, roadCodes: Set<String>) = template.query("""
         SELECT string_agg(pnazv, ' | ') AS name, stan AS code
         FROM (
-             SELECT DISTINCT pnazv, stan
-             FROM nsi.stanv
-             WHERE array_position(Array ${roadCodes.map{
+            SELECT DISTINCT pnazv, stan
+            FROM nsi.stanv
+            WHERE array_position(Array ${roadCodes.map{
             code -> when(code){
-                 "'" -> "'\$code'::char"
+                 "'" -> "'\''::char"
                  else -> "'$code'::char"}}
-             }, dor) IS NOT NULL
-             AND '$date' between datand and datakd
-             AND '$date' between datani and dataki
-         ) as s
+            }, dor) IS NOT NULL
+            AND '$date' between datand and datakd
+            AND '$date' between datani and dataki
+        ) as s
         GROUP BY code
         """, nameAndCodeMapper)
         .toSet()

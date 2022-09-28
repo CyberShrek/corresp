@@ -44,7 +44,6 @@
         opacity: 0.8;
         text-align: center;
         white-space: normal;
-        border-radius: 5px;
-        box-shadow: 0 0 3px gray;
+        border-radius: var(--border-radius);
     }
 </style>

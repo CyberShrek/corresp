@@ -4,22 +4,24 @@
 
     export let title
 
-    let elem
+    let report
 
     afterUpdate(() => {
-        // elem.scrollIntoView({
+        // report.scrollIntoView({
         //     behavior: 'smooth'
         // })
     })
 </script>
 
-<report transition:fade bind:this={elem}>
+<report transition:fade bind:this={report}>
     <header> <p>{title}</p> </header>
     <slot></slot>
 </report>
 
 <style>
     report {
+        display: flex;
+        flex-direction: column;
         margin-top: 50vh;
     }
     report header {

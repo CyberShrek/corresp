@@ -53,8 +53,8 @@
         display: flex;
         margin: 5px;
         background-color: whitesmoke;
-        border-radius: 5px;
         border: var(--border);
+        border-radius: var(--border-radius);
         box-shadow: var(--shadow);
     }
 
@@ -92,7 +92,6 @@
         font-size: x-large;
         color: white;
         background: darkseagreen;
-        border-radius: 5px;
         border: var(--border);
         box-shadow: var(--shadow);
     }
