@@ -11,7 +11,7 @@ let countries = [], selectedCountryNames = [],
     stations  = [], selectedStationNames = []
 $: selectedCountries = selectedCountryNames.map(name => countries.find(desired => desired.name === name))
 $: selectedRoads     = selectedRoadNames   .map(name => roads    .find(desired => desired.name === name))
-$: selectedStations  = selectedStationNames.map(name => stations .find(desired => desired.name === name))
+$: selectedStations  = selectedStationNames.map(name => stations .find(desired => nameAndCode(desired) === name))
 
 $: countriesPromise = inputDate ?
     httpClient.getCountriesByDate(inputDate)
@@ -25,14 +25,6 @@ $: stationsPromise = selectedRoads.length > 0 ?
     httpClient.getStationsByDateAndRoadCodes(inputDate, selectedRoads.map(desired => desired.code))
         .then(r => stations = r) : stations = selectedStationNames = []
 
-$: type = selectedStations  ? "s" :
-          selectedRoads     ? "r" :
-          selectedCountries ? "c" : ""
-
-$: selected = selectedStations  ? selectedStations :
-              selectedRoads     ? selectedRoads    :
-              selectedCountries ? selectedCountries : []
-
 afterUpdate(() => {
     if (selectedStations.length > 0)  { type = "s"; selected = selectedStations }
     else
@@ -44,6 +36,8 @@ afterUpdate(() => {
 })
 
 $: isValid = type && selected && selected.length > 0
+
+const nameAndCode=(entity) => entity.name + " ("+entity.code+")"
 
 </script>
 
@@ -67,7 +61,7 @@ $: isValid = type && selected && selected.length > 0
 
 <!-- STATIONS -->
 <MultiSelect placeholder="Станции"
-             options={stations.map(station => station.name)}
+             options={stations.map(station => nameAndCode(station))}
              bind:selectedOptions={selectedStationNames}/>
 
 {#await stationsPromise} <Dropdown text="Загружаю список станций"/>

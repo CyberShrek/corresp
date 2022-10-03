@@ -7,9 +7,7 @@
     let report
 
     afterUpdate(() => {
-        // report.scrollIntoView({
-        //     behavior: 'smooth'
-        // })
+        report.scrollIntoView({ behavior: "smooth" })
     })
 </script>
 
@@ -22,7 +20,7 @@
     report {
         display: flex;
         flex-direction: column;
-        margin-top: 50vh;
+        min-height: 100vh;
     }
     report header {
         display: flex;
@@ -30,7 +28,9 @@
         align-items: center;
         width: 100%;
         height: 50px;
-        background: lightblue;
+        background: skyblue;
+        color: white;
+        font-weight: bold;
     }
     report header p{
         font-size: x-large;

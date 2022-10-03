@@ -1,32 +1,28 @@
 package me.illyc.corresp.controller
 
-import me.illyc.corresp.dao.Dao
-import org.springframework.stereotype.Controller
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.ResponseBody
+import me.illyc.corresp.dao.CorrespDao
+import me.illyc.corresp.model.Params
+import me.illyc.corresp.service.CorrespService
+import org.springframework.web.bind.annotation.*
 
-@Controller
-class CorrespController(private var dao: Dao) {
-
-    @GetMapping
-    fun index() = "index.html"
+@RestController
+class CorrespController(private val dao: CorrespDao,
+                        private val service: CorrespService) {
 
     @GetMapping("/carriers")
-    @ResponseBody
     fun getCarriers(@RequestParam date: String) = dao.getCarriersByDate(date)
 
     @GetMapping("/countries")
-    @ResponseBody
     fun getCountries(@RequestParam date: String) = dao.getCountriesByDate(date)
 
     @GetMapping("/roads")
-    @ResponseBody
     fun getRoads(@RequestParam date: String,
-                 @RequestParam countryCodes: Set<Int>) = dao.getRoadsByDateAndCountryCodes(date, countryCodes)
+                 @RequestParam countryCodes: Set<String>) = dao.getRoadsByCountryCodesAndDate(countryCodes, date)
 
     @GetMapping("/stations")
-    @ResponseBody
     fun getStations(@RequestParam date: String,
-                    @RequestParam roadCodes: Set<String>) = dao.getStationsByDateAndRoadCodes(date, roadCodes)
+                    @RequestParam roadCodes: Set<String>) = dao.getStationsByRoadCodesAndDate(roadCodes, date)
+
+    @PostMapping("/report1")
+    fun createReport1(@RequestBody params: Params) = service.createReport1ByParams(params)
 }

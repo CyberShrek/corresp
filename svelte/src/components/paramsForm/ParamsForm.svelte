@@ -5,7 +5,7 @@
     import {createEventDispatcher} from "svelte"
     const dispatch = createEventDispatcher()
 
-    let period = {}, carrier = {}, departure = {}, destination = {}
+    let period = {}, carrier = {}, depart = {}, destin = {}
 
     let width
 </script>
@@ -28,23 +28,23 @@
     <departure class="field">
         <p> Отправления </p>
         <div><Depstinature inputDate={period.date1}
-                           bind:type={departure.type}
-                           bind:selected={departure.selected}
-                           bind:isValid={departure.isValid}/>
+                           bind:type={depart.type}
+                           bind:selected={depart.selected}
+                           bind:isValid={depart.isValid}/>
         </div></departure>
 
     <destination class="field">
         <p> Назначения </p>
         <div><Depstinature inputDate={period.date1}
-                           bind:type={destination.type}
-                           bind:selected={destination.selected}
-                           bind:isValid={destination.isValid}/>
+                           bind:type={destin.type}
+                           bind:selected={destin.selected}
+                           bind:isValid={destin.isValid}/>
         </div></destination>
 </form>
 
 <input type="submit"
-       class:unavailable={!(period.isValid && carrier.isValid && departure.isValid && destination.isValid)}
-       on:click|preventDefault={() => dispatch("generateReport", {period, carrier, departure, destination})}
+       class:unavailable={!(period.isValid && carrier.isValid && depart.isValid && destin.isValid)}
+       on:click|preventDefault={() => dispatch("generateReport", {period, carrier, departure:depart, destination:destin})}
        value="Сформировать отчёт" style="width: {width}px"/>
 
 <style>
