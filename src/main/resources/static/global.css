@@ -18,6 +18,25 @@ p{
 	cursor: default;
 }
 
+table { border-collapse: collapse; }
+table > tbody > tr:nth-child(even){ background: whitesmoke }
+table th, table td { padding: 5px }
+table th {
+	background: skyblue;
+	color:white;
+	border-right:  3px solid white;
+	border-left:   3px solid white;
+	border-bottom: 1px solid white;
+}
+table > thead > tr:nth-child(odd) > th{
+	border-top-left-radius: 10px;
+	border-top-right-radius: 10px;
+}
+table td {
+	text-align: center;
+	border-left:var(--border)
+}
+
 input, select{
 	padding: 5px;
 	margin: 5px;

@@ -30,7 +30,7 @@ httpClient.createReport1ByParams=(params) => httpClient
         date1               : params.period.date1,
         date2               : params.period.date2,
         compareWithLastYear : params.period.compareWithLastYear,
-        carrierName         : params.carrier.selected.name,
+        carrierCode         : params.carrier.selected.code,
         departureType       : params.departure.type,
         departureCodes      : params.departure.selected.map(s => s.code),
         destinationType     : params.destination.type,

@@ -2,29 +2,46 @@
     import ReportTemplate from "./ReportTemplate.svelte"
     import SquareLabel from "../common/SquareLabel.svelte"
     import {httpClient} from "../../web/httpClient"
+    import {declineNumeral} from "../../utils"
 
     export let inputParams
 
     let rows = [{
         fromTo: undefined,
-        passengersCount:   { count: undefined, changedFromLY: undefined, proportion: undefined },
-        income:            { count: undefined, changedFromLY: undefined, proportion: undefined },
-        incomeRate:        { count: undefined, changedFromLY: undefined },
-        passengerTurnover: { count: undefined, changedFromLY: undefined, proportion: undefined },
+        passengers:         { amount: undefined, changedFromLY: undefined, proportion: undefined },
+        income:             { amount: undefined, changedFromLY: undefined, proportion: undefined },
+        incomeRate:         { amount: undefined, changedFromLY: undefined },
+        passengerTurnover:  { amount: undefined, changedFromLY: undefined, proportion: undefined },
         trainsCount: undefined
     }]
 
     $: promise = inputParams &&
         httpClient.createReport1ByParams(inputParams)
+            .then(report => rows = report)
 
+    $: total = rows.find(row => row.fromTo = "Total")
+
+
+    function getColorByValue(value){
+        if (value === 0) return "black"
+        if (value > 0) return "limegreen"
+        if (value < 0) return "orangered"
+    }
 </script>
 
 <ReportTemplate title="Список корреспонденций пассажиропотоков">
     <labels>
-        <SquareLabel name="Пассажиры"          value="1111" img="img/passenger.png" background="#e2f0d9"/>
-        <SquareLabel name="Тысяч рублей"       value="1111" img="img/wallet.png"    background="#dae3f3"/>
-        <SquareLabel name="Рублей с пассажира" value="1234" img="img/ruble.png"     background="#fbe5d6"/>
-        <SquareLabel name="Пасс-км"            value="12345" img="img/distance.png"  background="#fff2cc"/>
+        <SquareLabel name={"Пассажир" + declineNumeral(total.passengers.amount, ["", "а", "ов"])}
+                     value={total.passengers.amount} img="img/passenger.png" background="#e2f0d9"/>
+
+        <SquareLabel name={`Тысяч${declineNumeral(total.income.amount, ["а", "и", ""])} рублей`}
+                     value={total.income.amount} img="img/wallet.png"    background="#dae3f3"/>
+
+        <SquareLabel name={`Рубл${declineNumeral(total.incomeRate.amount, ["ь", "я", "ей"])} с пассажира`}
+                     value={total.incomeRate.amount} img="img/ruble.png"     background="#fbe5d6"/>
+
+        <SquareLabel name={"Пассажиро-километр" + declineNumeral(total.passengerTurnover.amount, ["", "а", "ов"])}
+                     value={total.passengerTurnover.amount} img="img/distance.png"  background="#fff2cc"/>
     </labels>
     <table>
         <thead>
@@ -51,24 +68,31 @@
                 <th>Доля в общем объёме, %</th>
             </tr>
         </thead>
+
         <tbody>
         {#each rows as row}
-            <tr>
-                <td><label><input type="checkbox"></label></td>
-                <td>{row.fromTo}</td>
-                <td>{row.passengersCount.count}</td>
-                <td>{row.passengersCount.changedFromLY}</td>
-                <td>{row.passengersCount.proportion}</td>
-                <td>{row.income.count}</td>
-                <td>{row.income.changedFromLY}</td>
-                <td>{row.income.proportion}</td>
-                <td>{row.incomeRate.count}</td>
-                <td>{row.incomeRate.changedFromLY}</td>
-                <td>{row.passengerTurnover.count}</td>
-                <td>{row.passengerTurnover.changedFromLY}</td>
-                <td>{row.passengerTurnover.proportion}</td>
-                <td>{row.trainsCount}</td>
-            </tr>
+            {#if row.fromTo && row.fromTo !== "Total"}
+                <tr>
+                    <td><label><input type="checkbox"></label></td>
+                    <td>{row.fromTo}</td>
+                    <td>{row.passengers.amount}</td>
+                    <td style:color={getColorByValue(row.passengers.changedFromLY)}>
+                        {row.passengers.changedFromLY}</td>
+                    <td>{row.passengers.proportion}</td>
+                    <td>{row.income.amount}</td>
+                    <td style:color={getColorByValue(row.income.changedFromLY)}>
+                        {row.income.changedFromLY}</td>
+                    <td>{row.income.proportion}</td>
+                    <td>{row.incomeRate.amount}</td>
+                    <td style:color={getColorByValue(row.incomeRate.changedFromLY)}>
+                        {row.incomeRate.changedFromLY}</td>
+                    <td>{row.passengerTurnover.amount}</td>
+                    <td style:color={getColorByValue(row.passengerTurnover.changedFromLY)}>
+                        {row.passengerTurnover.changedFromLY}</td>
+                    <td>{row.passengerTurnover.proportion}</td>
+                    <td>{row.trainsCount}</td>
+                </tr>
+            {/if}
         {/each}
         </tbody>
     </table>
@@ -80,17 +104,4 @@
         justify-content: space-around;
         padding: 10px;
     }
-    table {
-        border-collapse: collapse;
-    }
-    table th, table td { padding: 5px }
-    table th {
-        background: skyblue;
-        color: white;
-        font-weight: normal;
-    }
-    table td {
-        border: var(--border);
-    }
-
 </style>

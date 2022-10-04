@@ -3,8 +3,6 @@
     import Report1 from "./components/reports/Report1.svelte"
 
     let formParams
-
-
 </script>
 <p> Анализ корреспонденций пассажиропотоков </p>
 

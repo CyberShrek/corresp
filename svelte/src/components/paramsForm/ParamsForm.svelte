@@ -89,6 +89,7 @@
     input[type=submit]{
         display: block;
         justify-self: center;
+        margin-bottom: 100px;
         font-size: x-large;
         color: white;
         background: darkseagreen;
