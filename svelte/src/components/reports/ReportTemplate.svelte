@@ -2,13 +2,8 @@
     import {fade} from "svelte/transition"
     import {afterUpdate} from "svelte"
 
-    export let title
+    export let title, report
 
-    let report
-
-    afterUpdate(() => {
-        report.scrollIntoView({ behavior: "smooth" })
-    })
 </script>
 
 <report transition:fade bind:this={report}>
@@ -21,6 +16,7 @@
         display: flex;
         flex-direction: column;
         min-height: 100vh;
+        text-align: center;
     }
     report header {
         display:flex;

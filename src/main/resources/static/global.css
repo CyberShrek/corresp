@@ -10,7 +10,7 @@ body {
 	padding: 0;
 }
 * {
-	font-family: Helvetica, serif;
+	font-family: Calibri, serif;
 	font-size: medium;
 	transition: 0.1s;
 }
@@ -18,30 +18,26 @@ p{
 	cursor: default;
 }
 
-table { border-collapse: collapse; }
-table > tbody > tr:nth-child(even){ background: whitesmoke }
+table { border-spacing: 0 }
 table th, table td { padding: 5px }
 table th {
 	background: skyblue;
 	color:white;
-	border-right:  3px solid white;
-	border-left:   3px solid white;
-	border-bottom: 1px solid white;
+	border-right: 3px solid white;
+	border-left:  3px solid white;
 }
-table > thead > tr:nth-child(odd) > th{
-	border-top-left-radius: 10px;
-	border-top-right-radius: 10px;
-}
+table > thead > tr:nth-child(even) > th{ border-top: 1px solid white }
 table td {
 	text-align: center;
 	border-left:var(--border)
 }
+table > tbody > tr:nth-child(even){ background: whitesmoke }
 
-input, select{
+input{
 	padding: 5px;
 	margin: 5px;
 }
-input, select, .input{
+input, .input{
 	cursor: pointer;
 	border: thin solid gray;
 	border-radius: var(--border-radius);

@@ -2,100 +2,77 @@
     import ReportTemplate from "./ReportTemplate.svelte"
     import SquareLabel from "../common/SquareLabel.svelte"
     import {httpClient} from "../../web/httpClient"
-    import {declineNumeral} from "../../utils"
+    import {declineNumeral, filtrate, scrollInto} from "../../utils"
+    import {fly} from "svelte/transition"
+    import PopUp from "../common/PopUp.svelte"
+    import Table from "./table/Table.svelte"
+    import Row from "./table/Row.svelte"
 
     export let inputParams
 
-    let rows = [{
-        fromTo: undefined,
-        passengers:         { amount: undefined, changedFromLY: undefined, proportion: undefined },
-        income:             { amount: undefined, changedFromLY: undefined, proportion: undefined },
-        incomeRate:         { amount: undefined, changedFromLY: undefined },
-        passengerTurnover:  { amount: undefined, changedFromLY: undefined, proportion: undefined },
-        trainsCount: undefined
-    }]
+    let rows = [],
+        filter,
+        report
 
     $: promise = inputParams &&
         httpClient.createReport1ByParams(inputParams)
-            .then(report => rows = report)
+            .then(res => {
+                rows = res
+                scrollInto(report)
+            })
 
-    $: total = rows.find(row => row.fromTo = "Total")
+    $: total = rows.find(row => row.fromTo = "TOTAL")
 
-
-    function getColorByValue(value){
-        if (value === 0) return "black"
-        if (value > 0) return "limegreen"
-        if (value < 0) return "orangered"
-    }
 </script>
 
-<ReportTemplate title="Список корреспонденций пассажиропотоков">
-    <labels>
-        <SquareLabel name={"Пассажир" + declineNumeral(total.passengers.amount, ["", "а", "ов"])}
-                     value={total.passengers.amount} img="img/passenger.png" background="#e2f0d9"/>
+<ReportTemplate bind:report title="Список корреспонденций пассажиропотоков">
+    {#await promise}
+        <PopUp text="Загрузка отчёта" type="loading"/>
+    {:then _}
+        {#if rows.length === 0}
+            Корресподенции не найдены 😕
+        {:else}
+        <labels transition:fly={{y: 100}}>
+            <SquareLabel name={"Пассажир" + declineNumeral(total.passengers.amount, ["", "а", "ов"])}
+                         value={total.passengers.amount} img="img/passenger.png" background="#e2f0d9"/>
 
-        <SquareLabel name={`Тысяч${declineNumeral(total.income.amount, ["а", "и", ""])} рублей`}
-                     value={total.income.amount} img="img/wallet.png"    background="#dae3f3"/>
+            <SquareLabel name={`Тысяч${declineNumeral(total.income.amount, ["а", "и", ""])} рублей`}
+                         value={total.income.amount} img="img/wallet.png"    background="#dae3f3"/>
 
-        <SquareLabel name={`Рубл${declineNumeral(total.incomeRate.amount, ["ь", "я", "ей"])} с пассажира`}
-                     value={total.incomeRate.amount} img="img/ruble.png"     background="#fbe5d6"/>
+            <SquareLabel name={`Рубл${declineNumeral(total.incomeRate.amount, ["ь", "я", "ей"])} с пассажира`}
+                         value={total.incomeRate.amount} img="img/ruble.png"     background="#fbe5d6"/>
 
-        <SquareLabel name={"Пассажиро-километр" + declineNumeral(total.passengerTurnover.amount, ["", "а", "ов"])}
-                     value={total.passengerTurnover.amount} img="img/distance.png"  background="#fff2cc"/>
-    </labels>
-    <table>
-        <thead>
-            <tr>
-                <th rowspan="2"></th>
-                <th rowspan="2">Корресподенция пассажиропотоков</th>
-                <th colspan="3">Количество пассажиров, пасс.</th>
-                <th colspan="3">Доходные поступления, тыс.руб.</th>
-                <th colspan="2">Доходная ставка, руб./пасс.</th>
-                <th colspan="3">Пассажирооборот, пасс./км</th>
-                <th rowspan="2">Количество поездов, ед.</th>
-            </tr>
-            <tr>
-                <th>Отчётный период</th>
-                <th>Рост/падение, %</th>
-                <th>Доля в общем объёме, %</th>
-                <th>Отчётный период</th>
-                <th>Рост/падение, %</th>
-                <th>Доля в общем объёме, %</th>
-                <th>Отчётный период</th>
-                <th>Рост/падение, %</th>
-                <th>Отчётный период</th>
-                <th>Рост/падение, %</th>
-                <th>Доля в общем объёме, %</th>
-            </tr>
-        </thead>
-
-        <tbody>
-        {#each rows as row}
-            {#if row.fromTo && row.fromTo !== "Total"}
-                <tr>
-                    <td><label><input type="checkbox"></label></td>
-                    <td>{row.fromTo}</td>
-                    <td>{row.passengers.amount}</td>
-                    <td style:color={getColorByValue(row.passengers.changedFromLY)}>
-                        {row.passengers.changedFromLY}</td>
-                    <td>{row.passengers.proportion}</td>
-                    <td>{row.income.amount}</td>
-                    <td style:color={getColorByValue(row.income.changedFromLY)}>
-                        {row.income.changedFromLY}</td>
-                    <td>{row.income.proportion}</td>
-                    <td>{row.incomeRate.amount}</td>
-                    <td style:color={getColorByValue(row.incomeRate.changedFromLY)}>
-                        {row.incomeRate.changedFromLY}</td>
-                    <td>{row.passengerTurnover.amount}</td>
-                    <td style:color={getColorByValue(row.passengerTurnover.changedFromLY)}>
-                        {row.passengerTurnover.changedFromLY}</td>
-                    <td>{row.passengerTurnover.proportion}</td>
-                    <td>{row.trainsCount}</td>
-                </tr>
-            {/if}
-        {/each}
-        </tbody>
-    </table>
+            <SquareLabel name={"Пассажиро-километр" + declineNumeral(total.passengerTurnover.amount, ["", "а", "ов"])}
+                         value={total.passengerTurnover.amount} img="img/distance.png"  background="#fff2cc"/>
+        </labels>
+        <Table>
+            <th slot="before-0" rowspan="2"></th>
+            <th slot="before-1" rowspan="2">
+                <input type="text"
+                       bind:value={filter}
+                       on:click={(event) => scrollInto(event.target.closest("table"))}
+                       placeholder="Корресподенция">
+            </th>
+            <th slot="after-0"  rowspan="2">Количество поездов, ед.</th>
+            <tbody slot="body">
+            {#each rows as row (row.fromTo)}
+                {#if row.fromTo && row.fromTo !== "TOTAL" && filtrate(row.fromTo, filter)}
+                    <Row row={row}>
+                        <td slot="before-0">
+                            <label><input type="checkbox"></label></td>
+                        <td slot="before-1">{row.fromTo}</td>
+                        <td slot="after-0">
+                            <label class="link" title="Показать отчёт по поездам"> {row.trainsCount}</label>
+                        </td>
+                    </Row>
+                {/if}
+            {/each}
+            </tbody>
+        </Table>
+        {/if}
+    {:catch error}
+        Ошибка загрузки 🤬
+    {/await}
 </ReportTemplate>
 
 <style>
@@ -103,5 +80,13 @@
         display: flex;
         justify-content: space-around;
         padding: 10px;
+    }
+    input[type=checkbox]{transform: scale(1.2)}
+
+    .link {
+        cursor: pointer;
+        font-weight: bold;
+        color: deepskyblue;
+        text-decoration: underline;
     }
 </style>
