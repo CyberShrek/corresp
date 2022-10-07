@@ -1,6 +1,9 @@
 :root{
+	--theme-color: skyblue;
+	--solid-color: whitesmoke;
+
 	--border: thin solid lightgray;
-	--border-radius: 5px;
+	--border-radius: 10px;
 	--shadow: 0 2px 5px darkgray;
 }
 
@@ -8,6 +11,7 @@ body {
 	display: grid;
 	margin: 0;
 	padding: 0;
+
 }
 * {
 	font-family: Calibri, serif;
@@ -18,10 +22,18 @@ p{
 	cursor: default;
 }
 
-table { border-spacing: 0 }
-table th, table td { padding: 5px }
+table {
+	border-spacing: 0;
+	background: var(--solid-color);
+}
+table > thead {
+	z-index: 10;
+	position: sticky;
+	top: 0;
+	filter: drop-shadow(var(--shadow));
+}
 table th {
-	background: skyblue;
+	background: var(--theme-color);
 	color:white;
 	border-right: 3px solid white;
 	border-left:  3px solid white;
@@ -31,7 +43,8 @@ table td {
 	text-align: center;
 	border-left:var(--border)
 }
-table > tbody > tr:nth-child(even){ background: whitesmoke }
+table > tbody > tr:nth-child(even){ background: white }
+table th, table td { padding: 5px }
 
 input{
 	padding: 5px;

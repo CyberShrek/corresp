@@ -1,14 +1,22 @@
 <script>
     import {fade} from "svelte/transition"
-    import {afterUpdate} from "svelte"
+    import PopUp from "../common/PopUp.svelte"
+    import {scrollInto} from "../../utils"
 
-    export let title, report
-
+    export let title, report, loadingPromise
 </script>
 
 <report transition:fade bind:this={report}>
     <header> <p>{title}</p> </header>
-    <slot></slot>
+    {#await loadingPromise}
+        <PopUp text="Загрузка отчёта" type="loading"/>
+    {:then _}
+        <slot></slot>
+        {#if scrollInto(report)}{''}{/if}
+    {:catch error}
+        Ошибка загрузки 🤬
+        {#if scrollInto(report)}{''}{/if}
+    {/await}
 </report>
 
 <style>
@@ -17,6 +25,7 @@
         flex-direction: column;
         min-height: 100vh;
         text-align: center;
+        box-shadow: var(--shadow)
     }
     report header {
         display:flex;
@@ -24,12 +33,9 @@
         align-items:center;
         width:100%;
         height:50px;
-        background:skyblue;
         color:white;
         font-weight:bold;
-        border-top: var(--border);
-        border-bottom: var(--border);
-        box-shadow:var(--shadow)
+        background: var(--theme-color);
     }
     report header p{
         font-size: x-large;

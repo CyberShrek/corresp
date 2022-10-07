@@ -25,14 +25,5 @@ httpClient.getRoadsByDateAndCountryCodes=(date, countryCodes) => httpClient
 httpClient.getStationsByDateAndRoadCodes=(date, roadCodes) => httpClient
     .get(`stations?date=${date}&roadCodes=${encodeURIComponent(roadCodes)}`)
 
-httpClient.createReport1ByParams=(params) => httpClient
-    .post("report1", JSON.stringify({
-        date1               : params.period.date1,
-        date2               : params.period.date2,
-        compareWithLastYear : params.period.compareWithLastYear,
-        carrierCode         : params.carrier.selected.code,
-        departureType       : params.departure.type,
-        departureCodes      : params.departure.selected.map(s => s.code),
-        destinationType     : params.destination.type,
-        destinationCodes    : params.destination.selected.map(s => s.code)
-    }))
+httpClient.getReportByParams=(reportNum, params) => httpClient
+    .get(`report${reportNum}?`+new URLSearchParams(params).toString())

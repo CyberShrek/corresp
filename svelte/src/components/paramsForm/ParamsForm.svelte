@@ -5,9 +5,10 @@
     import {createEventDispatcher} from "svelte"
     const dispatch = createEventDispatcher()
 
-    let period = {}, carrier = {}, depart = {}, destin = {}
+    let period = {}, carrier = {}, departure = {}, destination = {}
 
     let width
+
 </script>
 <form bind:offsetWidth={width}>
     <period class="field">
@@ -28,23 +29,33 @@
     <departure class="field">
         <p> Отправления </p>
         <div><Depstinature inputDate={period.date1}
-                           bind:type={depart.type}
-                           bind:selected={depart.selected}
-                           bind:isValid={depart.isValid}/>
+                           bind:type={departure.type}
+                           bind:selected={departure.selected}
+                           bind:isValid={departure.isValid}/>
         </div></departure>
 
     <destination class="field">
         <p> Назначения </p>
         <div><Depstinature inputDate={period.date1}
-                           bind:type={destin.type}
-                           bind:selected={destin.selected}
-                           bind:isValid={destin.isValid}/>
+                           bind:type={destination.type}
+                           bind:selected={destination.selected}
+                           bind:isValid={destination.isValid}/>
         </div></destination>
 </form>
 
 <input type="submit"
-       class:unavailable={!(period.isValid && carrier.isValid && depart.isValid && destin.isValid)}
-       on:click|preventDefault={() => dispatch("generateReport", {period, carrier, departure:depart, destination:destin})}
+       class:unavailable={!(period.isValid && carrier.isValid && departure.isValid && destination.isValid)}
+       on:click|preventDefault={() => dispatch("generateReport1",
+       {
+           date1               : period.date1,
+           date2               : period.date2,
+           compareWithLastYear : period.compareWithLastYear,
+           carrierCode         : carrier.selected.code,
+           departureType       : departure.type,
+           departureCodes      : departure.selected.map(s => s.code),
+           destinationType     : destination.type,
+           destinationCodes    : destination.selected.map(s => s.code)
+       })}
        value="Сформировать отчёт" style="width: {width}px"/>
 
 <style>
@@ -52,8 +63,8 @@
         justify-self: center;
         display: flex;
         margin: 5px;
-        background-color: whitesmoke;
-        border: var(--border);
+        padding: 5px;
+        background-color: var(--solid-color);
         border-radius: var(--border-radius);
         box-shadow: var(--shadow);
     }
@@ -87,13 +98,14 @@
     form > period, form > carrier, form > departure { border-right: var(--border) }
 
     input[type=submit]{
+        z-index: 10;
         display: block;
         justify-self: center;
         margin-bottom: 100px;
         font-size: x-large;
         color: white;
         background: darkseagreen;
-        border: var(--border);
+        border: 0;
         box-shadow: var(--shadow);
     }
 </style>

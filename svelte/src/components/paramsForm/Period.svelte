@@ -1,5 +1,6 @@
 <script>
     import Dropdown from "../common/Dropdown.svelte"
+    import {httpClient} from "../../web/httpClient";
 
     export let
         date1 = new Date().toJSON().slice(0, 10),
