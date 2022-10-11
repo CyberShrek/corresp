@@ -16,7 +16,6 @@
 
 <ParamsForm on:generateReport1={(event) => report1Input = event.detail}/>
 
-
 {#if report1Input}
     <Report1 inputParams={report1Input}
              on:generateReport2={(event) => report2Input = alert(JSON.stringify(event.detail))}

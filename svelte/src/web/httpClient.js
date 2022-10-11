@@ -26,4 +26,4 @@ httpClient.getStationsByDateAndRoadCodes=(date, roadCodes) => httpClient
     .get(`stations?date=${date}&roadCodes=${encodeURIComponent(roadCodes)}`)
 
 httpClient.getReportByParams=(reportNum, params) => httpClient
-    .get(`report${reportNum}?`+new URLSearchParams(params).toString())
+    .get(`reports/${reportNum}?`+new URLSearchParams(params).toString())

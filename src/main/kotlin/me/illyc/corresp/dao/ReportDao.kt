@@ -26,11 +26,8 @@ class ReportDao (private val jdbc: JdbcTemplate) {
                 departureType   = params.departureType,   departureCodes   = params.departureCodes,
                 destinationType = params.destinationType, destinationCodes = params.destinationCodes
             )
-
-            println(Select.Reports.comparedReport1ByParams(params, paramsLY))
             return rowSetToReport(jdbc.queryForRowSet(Select.Reports.comparedReport1ByParams(params, paramsLY)))
         }
-        println(Select.Reports.report1ByParams(params))
         return rowSetToReport(jdbc.queryForRowSet(Select.Reports.report1ByParams(params)))
     }
 
