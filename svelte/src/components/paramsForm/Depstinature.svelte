@@ -9,21 +9,27 @@ export let inputDate, type, selected, isValid
 let countries = [], selectedCountryNames = [],
     roads     = [], selectedRoadNames    = [],
     stations  = [], selectedStationNames = []
+
 $: selectedCountries = selectedCountryNames.map(name => countries.find(desired => desired.name === name))
 $: selectedRoads     = selectedRoadNames   .map(name => roads    .find(desired => desired.name === name))
 $: selectedStations  = selectedStationNames.map(name => stations .find(desired => nameAndCode(desired) === name))
 
+// These setters are only used to avoid unwanted calls in the chain of reactive promises
+const setCountries=(val) => val ? countries = val : countries = selectedCountryNames = []
+const setRoads=(val)     => val ? roads     = val : roads     = selectedRoadNames    = []
+const setStations=(val)  => val ? stations  = val : stations  = selectedStationNames = []
+
 $: countriesPromise = inputDate ?
     httpClient.getCountriesByDate(inputDate)
-        .then(r => countries = r) : countries = selectedCountryNames = []
+        .then(r => setCountries(r)) : setCountries(null)
 
 $: roadsPromise = selectedCountries.length > 0 ?
-    httpClient.getRoadsByDateAndCountryCodes(inputDate, selectedCountries.map(desired => desired.code))
-        .then(r => roads = r) : roads = selectedRoadNames = []
+    httpClient.getRoadsByDateAndCountryCodes(inputDate, selectedCountries.map(country => country.code))
+        .then(r => setRoads(r)) : setRoads(null)
 
 $: stationsPromise = selectedRoads.length > 0 ?
-    httpClient.getStationsByDateAndRoadCodes(inputDate, selectedRoads.map(desired => desired.code))
-        .then(r => stations = r) : stations = selectedStationNames = []
+    httpClient.getStationsByDateAndRoadCodes(inputDate, selectedRoads.map(road => road.code))
+        .then(r => setStations(r)) : setStations(null)
 
 afterUpdate(() => {
     if (selectedStations.length > 0)  { type = "s"; selected = selectedStations }

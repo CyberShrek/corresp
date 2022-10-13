@@ -1,9 +1,10 @@
 :root{
 	--theme-color: skyblue;
+	--submit-color: darkseagreen;
 	--solid-color: whitesmoke;
 
 	--border: thin solid lightgray;
-	--border-radius: 10px;
+	--border-radius: 5px;
 	--shadow: 0 2px 5px darkgray;
 }
 
@@ -11,7 +12,6 @@ body {
 	display: grid;
 	margin: 0;
 	padding: 0;
-
 }
 * {
 	font-family: Calibri, serif;
@@ -46,19 +46,26 @@ table td {
 table > tbody > tr:nth-child(even){ background: white }
 table th, table td { padding: 5px }
 
+img {
+	user-select: none;
+	pointer-events: none;
+}
+
 input{
 	padding: 5px;
 	margin: 5px;
 }
-input, .input{
+input, .input, button{
 	cursor: pointer;
 	border: thin solid gray;
 	border-radius: var(--border-radius);
 }
 input[type=date], input[type=text]{ cursor: text; }
 
-input[type=button]:hover,  input[type=submit]:hover { filter: contrast(75%) }
-input[type=button]:active, input[type=submit]:active{ filter: contrast(50%) }
+input[type=text]{ margin: 0; }
+
+input[type=button]:hover,  input[type=submit]:hover,  button:hover { filter: contrast(85%) }
+input[type=button]:active, input[type=submit]:active, button:active{ filter: contrast(60%) }
 
 .wrong { outline: 3px solid red }
 .unavailable {

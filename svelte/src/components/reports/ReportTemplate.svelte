@@ -2,20 +2,34 @@
     import {fade} from "svelte/transition"
     import PopUp from "../common/PopUp.svelte"
     import {scrollInto} from "../../utils"
+    import {httpClient} from "../../web/httpClient"
 
-    export let title, report, loadingPromise
+    export let
+        title,
+        report,
+        inputParams
+
+    $: promise = inputParams && httpClient.getReportByParams(1, inputParams)
+        .then(res => updateReport(res))
+
+    function updateReport(rep) {
+        report = rep
+        scrollInto(reportEl)
+    }
+
+    let reportEl
+
 </script>
 
-<report transition:fade bind:this={report}>
+<report transition:fade bind:this={reportEl}>
     <header> <p>{title}</p> </header>
-    {#await loadingPromise}
+    {#await promise}
         <PopUp text="Загрузка отчёта" type="loading"/>
     {:then _}
         <slot></slot>
-        {#if scrollInto(report)}{''}{/if}
     {:catch error}
         Ошибка загрузки 🤬
-        {#if scrollInto(report)}{''}{/if}
+        {#if scrollInto(reportEl)}{''}{/if}
     {/await}
 </report>
 

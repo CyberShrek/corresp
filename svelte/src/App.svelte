@@ -6,19 +6,26 @@
     import Report4 from "./components/reports/Report4.svelte"
     import Report5 from "./components/reports/Report5.svelte"
     import Report6 from "./components/reports/Report6.svelte"
+    import FloatButton from "./components/common/FloatButton.svelte";
+    import {scrollInto} from "./utils";
 
     let report1Input, report2Input, report3Input, report4Input, report5Input, report6Input
+
+    let scrollY
 
     report1Input = {"date1":"2022-06-06","date2":"2022-07-07","compareWithLastYear":false,"carrierCode":"1","departureType":"r","departureCodes":["М"],"destinationType":"r","destinationCodes":["М"]}
 
 </script>
+
+<svelte:window bind:scrollY/>
+
 <p> Анализ корреспонденций пассажиропотоков </p>
 
 <ParamsForm on:generateReport1={(event) => report1Input = event.detail}/>
 
 {#if report1Input}
     <Report1 inputParams={report1Input}
-             on:generateReport2={(event) => report2Input = alert(JSON.stringify(event.detail))}
+             on:generateReport2={(event) => report2Input = event.detail}
              on:generateReport3={(event) => report3Input = alert(JSON.stringify(event.detail))}
              on:generateReport4={(event) => report4Input = alert(JSON.stringify(event.detail))}
              on:generateReport5={(event) => report5Input = alert(JSON.stringify(event.detail))}
@@ -39,6 +46,13 @@
 {/if}
 {#if report6Input}
     <Report6 inputParams={report6Input}/>
+{/if}
+
+{#if (scrollY > 100)}
+    <FloatButton title="Вернуться наверх"
+                 image="img/to_top.svg"
+                 right="20"
+                 on:click={() => scrollInto(document.body)}/>
 {/if}
 
 <style>

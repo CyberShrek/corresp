@@ -1,3 +1,4 @@
+import {Report} from "./model/Report";
 
 export const httpClient = {}
 
@@ -27,3 +28,4 @@ httpClient.getStationsByDateAndRoadCodes=(date, roadCodes) => httpClient
 
 httpClient.getReportByParams=(reportNum, params) => httpClient
     .get(`reports/${reportNum}?`+new URLSearchParams(params).toString())
+    .then(reportTable => new Report(reportNum, reportTable))

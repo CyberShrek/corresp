@@ -63,7 +63,6 @@
         justify-self: center;
         display: flex;
         margin: 5px;
-        padding: 5px;
         background-color: var(--solid-color);
         border-radius: var(--border-radius);
         box-shadow: var(--shadow);
@@ -75,15 +74,16 @@
         min-width: 180px;
         max-width: 25vw;
         padding: 0 10px;
+        margin:  10px 0;
     }
 
     form > .field > p {
         justify-self: start;
-        margin: 0;
         width: 100%;
         text-align: center;
         font-size: large;
         padding: 10px 0;
+        margin: 0 0 5px 0;
         border-bottom: var(--border);
     }
 
@@ -104,7 +104,7 @@
         margin-bottom: 100px;
         font-size: x-large;
         color: white;
-        background: darkseagreen;
+        background: var(--submit-color);
         border: 0;
         box-shadow: var(--shadow);
     }
