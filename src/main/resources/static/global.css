@@ -12,6 +12,8 @@ body {
 	display: grid;
 	margin: 0;
 	padding: 0;
+	overflow-y: scroll;
+	overflow-x: hidden;
 }
 * {
 	font-family: Calibri, serif;
@@ -24,27 +26,36 @@ p{
 
 table {
 	border-spacing: 0;
-	background: var(--solid-color);
 }
+table th,
+table td { padding: 5px }
+
 table > thead {
 	z-index: 10;
 	position: sticky;
 	top: 0;
-	filter: drop-shadow(var(--shadow));
+	box-shadow: var(--shadow);
 }
-table th {
+table > thead th {
+	padding: 10px;
+	color: white;
 	background: var(--theme-color);
-	color:white;
-	border-right: 3px solid white;
-	border-left:  3px solid white;
+	border-right: 2px solid white;
+	border-left:  2px solid white;
 }
 table > thead > tr:nth-child(even) > th{ border-top: 1px solid white }
-table td {
+table > thead > tr:nth-child(odd)  > th{
+	border-top:   2px solid white;
+	border-radius:  calc(2px + var(--border-radius)) calc(2px + var(--border-radius)) 0 0;
+	/* This "shadow" plugs the unwanted holes between the corner radii in the header cells */
+	box-shadow:   0 calc(-2px - var(--border-radius)) 0 0 white;
+}
+table > tbody td {
 	text-align: center;
 	border-left:var(--border)
 }
-table > tbody > tr:nth-child(even){ background: white }
-table th, table td { padding: 5px }
+table > tbody > tr:nth-child(odd){ background: var(--solid-color) }
+
 
 img {
 	user-select: none;
@@ -56,13 +67,18 @@ input{
 	margin: 5px;
 }
 input, .input, button{
+	z-index: 10;
 	cursor: pointer;
-	border: thin solid gray;
+	/*border: thin solid gray;*/
+	border: none;
 	border-radius: var(--border-radius);
 }
-input[type=date], input[type=text]{ cursor: text; }
+input[type=date], input[type=text]{cursor: text;}
 
-input[type=text]{ margin: 0; }
+input[type=text]{
+	margin: 0;
+	min-width: 100px;
+}
 
 input[type=button]:hover,  input[type=submit]:hover,  button:hover { filter: contrast(85%) }
 input[type=button]:active, input[type=submit]:active, button:active{ filter: contrast(60%) }

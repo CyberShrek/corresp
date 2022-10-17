@@ -1,33 +1,53 @@
 <script>
-    import ReportTemplate from "./ReportTemplate.svelte"
+    import ReportTemplate from "./templates/ReportTemplate.svelte"
     import SquareLabel from "../common/SquareLabel.svelte"
-    import {httpClient} from "../../web/httpClient"
     import {declineNumeral, filtrate, scrollInto} from "../../utils"
     import {fly} from "svelte/transition"
-    import Table from "./table/Table.svelte"
-    import Row from "./table/Row.svelte"
+    import Table from "./templates/table/Table.svelte"
+    import Row from "./templates/table/Row.svelte"
     import {createEventDispatcher} from "svelte"
-
     const dispatch = createEventDispatcher()
 
     export let inputParams
 
     let report,
         totalRow,
-        selectedRows = [],
+        filtratedRows = [],
+        selectedRows  = [],
         filter,
         filterWidth
 
-    $: totalRow = report && report.rows.find(row => row.fromToNames = "TOTAL")
-    $: noRowsSelected = selectedRows.length < 1
+
+    const cleanSelects=() => selectedRows  = []
+
+    $: if (report){
+        cleanSelects()
+
+        // console.log(noRowsSelected)
+
+        totalRow = report.rows.find(row => row.fromToNames === "TOTAL")
+
+        filtratedRows = report.rows
+            .filter(row => row.fromToNames !== "TOTAL" && filtrate(row.fromToNames, filter))
+
+    }
+    $: noRowsSelected = selectedRows.length === 0
+
+    const dispatchGenerateReport=(reportNum, row) => dispatch("generateReport" + reportNum, {
+        date1: inputParams.date1,
+        date2: inputParams.date2,
+        compareWithLastYear: inputParams.compareWithLastYear,
+        carrierCode: inputParams.carrierCode,
+        fromCodes: row ? row.fromCode : selectedRows.map(row => row.fromCode),
+        toCodes:   row ? row.toCode   : selectedRows.map(row => row.toCode)
+    })
 </script>
 
 <ReportTemplate title="Список корреспонденций пассажиропотоков"
+                reportNum={1}
                 inputParams={inputParams}
                 bind:report>
-    {#if report.rows.length === 1}
-        Корресподенции не найдены 😕
-    {:else}
+
     <labels transition:fly={{y: 100}}>
         <SquareLabel name={"Пассажир" + declineNumeral(totalRow.passengers, ["", "а", "ов"])}
                      value={totalRow.passengers}
@@ -53,10 +73,14 @@
         <th slot="before-0" rowspan="2"></th>
         <th slot="before-1" rowspan="2">
             <buttons-block style="width: {filterWidth}px" class:unavailable={noRowsSelected}>
-                <button title="Анализ неравномерности"><img          src="img/graph.png"     alt=""></button>
-                <button title="Анализ по типам вагонов"><img         src="img/train_car.png" alt=""></button>
-                <button title="Анализ по виду документа"><img        src="img/document.png"  alt=""></button>
-                <button title="Анализ по характеристикам места"><img src="img/seat.png"      alt=""></button>
+                <button title="Анализ неравномерности"
+                        on:click={() => dispatchGenerateReport(3)}><img src="img/graph.png"     alt=""></button>
+                <button title="Анализ по типам вагонов"
+                        on:click={() => dispatchGenerateReport(4)}><img src="img/train_car.png" alt=""></button>
+                <button title="Анализ по виду документа"
+                        on:click={() => dispatchGenerateReport(5)}><img src="img/document.png"  alt=""></button>
+                <button title="Анализ по характеристикам места"
+                        on:click={() => dispatchGenerateReport(7)}><img src="img/seat.png"      alt=""></button>
             </buttons-block>
 
             <label bind:offsetWidth={filterWidth}>
@@ -68,40 +92,24 @@
         <th slot="after-0"  rowspan="2">Количество поездов, ед.</th>
 
         <tbody slot="body">
-        {#each report.rows as row (row.fromToNames)}
-            {#if row.fromToNames
-                && row.fromToNames !== "TOTAL"
-                && filtrate(row.fromToNames, filter)}
-                <Row row={row}>
-                    <td slot="before-0">
-                        <input type="checkbox"
-                               value={row}
-                               bind:group={selectedRows}>
-                        </td>
-                    <td slot="before-1">{row.fromToNames}</td>
-                    <td slot="after-0">
-                        <div class="link"
-                             title="Показать отчёт по поездам"
-                             on:click={() => dispatch("generateReport2",
-                             {
-                                 date1: inputParams.date1,
-                                 date2: inputParams.date2,
-                                 compareWithLastYear: inputParams.compareWithLastYear,
-                                 carrierCode: inputParams.carrierCode,
-                                 fromCodes: row.fromCode,
-                                 toCodes: row.toCode
-                             }
-                             )}> {row.trainsCount}</div>
+        {#each filtratedRows as row (row.fromToNames)}
+            <Row row={row}>
+                <td slot="before-0">
+                    <input type="checkbox"
+                           value={row}
+                           bind:group={selectedRows}>
                     </td>
-                </Row>
-            {/if}
+                <td slot="before-1">{row.fromToNames}</td>
+                <td slot="after-0">
+                    <div class="link"
+                         title="Показать отчёт по поездам"
+                         on:click={() => dispatchGenerateReport(2, row)}> {row.trainsCount}</div>
+                </td>
+            </Row>
         {/each}
         </tbody>
     </Table>
-    {/if}
 </ReportTemplate>
-
-<div class="void"></div>
 
 <style>
     labels {
@@ -138,9 +146,5 @@
         align-items: center;
         height: 80%;
         width:  80%;
-    }
-
-    .void {
-        height: 100vh;
     }
 </style>

@@ -5,21 +5,21 @@
 
     export let inputDate, selected, isValid
 
-    let carriers = [], selectedCarrierNames = []
+    let carriers = [], selectedCarriers = []
 
     $: carriersPromise = inputDate ?
         httpClient.getCarriersByDate(inputDate)
-            .then(r => carriers = r) : carriers = selectedCarrierNames = []
+            .then(r => carriers = r) : carriers = []
 
-    $: selected = selectedCarrierNames.map(name => carriers.find(desired => desired.name === name))[0]
+    $: selected = selectedCarriers[0]
 
     $: isValid = selected !== undefined
 
 </script>
 
-<MultiSelect options={carriers.map(carrier => carrier.name)}
+<MultiSelect options={carriers}
+             bind:selectedOptions={selectedCarriers}
              placeholder="Перевозчик"
-             bind:selectedOptions={selectedCarrierNames}
              singleSelect={true}/>
 
     {#await carriersPromise} <Dropdown text="Загружаю список перевозчиков"/>

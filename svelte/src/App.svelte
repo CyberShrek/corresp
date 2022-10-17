@@ -6,14 +6,31 @@
     import Report4 from "./components/reports/Report4.svelte"
     import Report5 from "./components/reports/Report5.svelte"
     import Report6 from "./components/reports/Report6.svelte"
-    import FloatButton from "./components/common/FloatButton.svelte";
-    import {scrollInto} from "./utils";
+    import FloatButton from "./components/common/FloatButton.svelte"
+    import {scrollInto} from "./utils"
+    import Report7 from "./components/reports/Report7.svelte";
 
-    let report1Input, report2Input, report3Input, report4Input, report5Input, report6Input
+    let report1Input, report2Input, report3Input, report4Input, report5Input, report6Input, report7Input
 
     let scrollY
 
-    report1Input = {"date1":"2022-06-06","date2":"2022-07-07","compareWithLastYear":false,"carrierCode":"1","departureType":"r","departureCodes":["М"],"destinationType":"r","destinationCodes":["М"]}
+    let test0 = {"date1":"2022-06-06",
+        "date2":"2022-07-07",
+        "compareWithLastYear":false,
+        "carrierCode":"1",
+        "departureType":"r",
+        "departureCodes":["М"],
+        "destinationType":"r",
+        "destinationCodes":["М"]}
+
+    let test1 = {"date1":"2022-06-06",
+        "date2":"2022-07-07",
+        "compareWithLastYear":true,
+        "carrierCode":"1",
+        "departureType":"r",
+        "departureCodes":["М"],
+        "destinationType":"r",
+        "destinationCodes":["М"]}
 
 </script>
 
@@ -23,17 +40,20 @@
 
 <ParamsForm on:generateReport1={(event) => report1Input = event.detail}/>
 
+<div on:click={() => report1Input = test0}>Тест</div>
+<div on:click={() => report1Input = test1}>Тест со сравнением с прошлым годом</div>
+
 {#if report1Input}
     <Report1 inputParams={report1Input}
              on:generateReport2={(event) => report2Input = event.detail}
-             on:generateReport3={(event) => report3Input = alert(JSON.stringify(event.detail))}
-             on:generateReport4={(event) => report4Input = alert(JSON.stringify(event.detail))}
-             on:generateReport5={(event) => report5Input = alert(JSON.stringify(event.detail))}
-             on:generateReport6={(event) => report6Input = alert(JSON.stringify(event.detail))}/>
+
+             on:generateReport4={(event) => report4Input = event.detail}
+             on:generateReport5={(event) => report5Input = event.detail}
+             on:generateReport7={(event) => report7Input = event.detail}/>
 {/if}
 
 {#if report2Input}
-    <Report2 inputParams={report2Input}/>
+    <Report2 inputParams={report2Input} on:exit={() => report2Input = null}/>
 {/if}
 {#if report3Input}
     <Report3 inputParams={report3Input}/>
@@ -47,6 +67,9 @@
 {#if report6Input}
     <Report6 inputParams={report6Input}/>
 {/if}
+{#if report7Input}
+    <Report7 inputParams={report7Input}/>
+{/if}
 
 {#if (scrollY > 100)}
     <FloatButton title="Вернуться наверх"
@@ -56,6 +79,14 @@
 {/if}
 
 <style>
+
+    div {
+        cursor: pointer;
+        color: blue;
+        align-items: center;
+        justify-self: center;
+        font-size: x-large;
+    }
     p {
         text-align: center;
         font-size: x-large;

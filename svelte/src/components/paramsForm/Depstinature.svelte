@@ -6,18 +6,14 @@ import {afterUpdate} from "svelte"
 
 export let inputDate, type, selected, isValid
 
-let countries = [], selectedCountryNames = [],
-    roads     = [], selectedRoadNames    = [],
-    stations  = [], selectedStationNames = []
-
-$: selectedCountries = selectedCountryNames.map(name => countries.find(desired => desired.name === name))
-$: selectedRoads     = selectedRoadNames   .map(name => roads    .find(desired => desired.name === name))
-$: selectedStations  = selectedStationNames.map(name => stations .find(desired => nameAndCode(desired) === name))
+let countries = [], selectedCountries = [],
+    roads     = [], selectedRoads     = [],
+    stations  = [], selectedStations  = []
 
 // These setters are only used to avoid unwanted calls in the chain of reactive promises
-const setCountries=(val) => val ? countries = val : countries = selectedCountryNames = []
-const setRoads=(val)     => val ? roads     = val : roads     = selectedRoadNames    = []
-const setStations=(val)  => val ? stations  = val : stations  = selectedStationNames = []
+const setCountries=(val) => val ? countries = val : countries = []
+const setRoads=(val)     => val ? roads     = val : roads     = []
+const setStations=(val)  => val ? stations  = val : stations  = []
 
 $: countriesPromise = inputDate ?
     httpClient.getCountriesByDate(inputDate)
@@ -43,32 +39,34 @@ afterUpdate(() => {
 
 $: isValid = type && selected && selected.length > 0
 
-const nameAndCode=(entity) => entity.name + " ("+entity.code+")"
+const nameAndCodeOf=(entity) => entity.name + " ("+entity.code+")"
 
 </script>
 
 <!-- COUNTRIES -->
 <MultiSelect placeholder="Государства"
-             options={countries.map(country => country.name)}
-             bind:selectedOptions={selectedCountryNames}/>
+             options={countries}
+             bind:selectedOptions={selectedCountries}/>
 
 {#await countriesPromise} <Dropdown text="Загружаю список государств"/>
 {:catch error}            <Dropdown text="Не удалось загрузить список государств" type="error"/>
 {/await}
 
 <!-- ROADS -->
-<MultiSelect placeholder="Дороги"
-             options={roads.map(road => road.name)}
-             bind:selectedOptions={selectedRoadNames}/>
+<MultiSelect placeholder={`Дороги${selectedRoads.length > 0 ? "" : " (все)"}`}
+             allowSelectAll={true}
+             options={roads}
+             bind:selectedOptions={selectedRoads}/>
 
 {#await roadsPromise} <Dropdown text="Загружаю список дорог"/>
 {:catch error}        <Dropdown text="Не удалось загрузить список дорог" type="error"/>
 {/await}
 
 <!-- STATIONS -->
-<MultiSelect placeholder="Станции"
-             options={stations.map(station => nameAndCode(station))}
-             bind:selectedOptions={selectedStationNames}/>
+<MultiSelect placeholder={`Станции${selectedRoads.length > 0 ? "" : " (все)"}`}
+             allowSelectAll={true}
+             options={stations}
+             bind:selectedOptions={selectedStations}/>
 
 {#await stationsPromise} <Dropdown text="Загружаю список станций"/>
 {:catch error}           <Dropdown text="Не удалось загрузить список станций" type="error"/>
