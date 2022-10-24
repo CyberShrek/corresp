@@ -1,9 +1,9 @@
-import {Report} from "./model/Report";
+import {Report} from "./model/Report"
 
 export const httpClient = {}
 
 httpClient.send=(resourse, method, body) => fetch(resourse,
-    {method, body, headers: {"Content-Type": "application/json"}})
+    {method, body: JSON.stringify(body), headers: {"Content-Type": "application/json"}})
     .then(response => {
         if (response.ok) {
             if (response.status === 200) return response.json()

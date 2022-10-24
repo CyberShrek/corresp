@@ -17,19 +17,15 @@
         filter,
         filterWidth
 
-
     const cleanSelects=() => selectedRows  = []
 
     $: if (report){
         cleanSelects()
 
-        // console.log(noRowsSelected)
-
         totalRow = report.rows.find(row => row.fromToNames === "TOTAL")
 
         filtratedRows = report.rows
             .filter(row => row.fromToNames !== "TOTAL" && filtrate(row.fromToNames, filter))
-
     }
     $: noRowsSelected = selectedRows.length === 0
 

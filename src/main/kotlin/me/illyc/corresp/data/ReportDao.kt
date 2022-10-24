@@ -1,12 +1,12 @@
-package me.illyc.corresp.dao
+package me.illyc.corresp.data
 
-import me.illyc.corresp.dao.sql.Select.Reports
-import me.illyc.corresp.dao.sql.Select.Reports.report1ByParams
-import me.illyc.corresp.dao.sql.Select.Reports.report2ByParams
-import me.illyc.corresp.dao.sql.Select.Reports.report4ByParams
-import me.illyc.corresp.dao.sql.Select.Reports.report5ByParams
-import me.illyc.corresp.dao.sql.Select.Reports.report6ByParams
-import me.illyc.corresp.dao.sql.Select.Reports.report7ByParams
+import me.illyc.corresp.data.sql.Select.Reports
+import me.illyc.corresp.data.sql.Select.Reports.report1ByParams
+import me.illyc.corresp.data.sql.Select.Reports.report2ByParams
+import me.illyc.corresp.data.sql.Select.Reports.report4ByParams
+import me.illyc.corresp.data.sql.Select.Reports.report5ByParams
+import me.illyc.corresp.data.sql.Select.Reports.report6ByParams
+import me.illyc.corresp.data.sql.Select.Reports.report7ByParams
 import me.illyc.corresp.model.Report
 import me.illyc.corresp.model.Params
 import org.springframework.jdbc.core.JdbcTemplate

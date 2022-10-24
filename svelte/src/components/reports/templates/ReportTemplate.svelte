@@ -84,9 +84,8 @@
         margin: 2px;
         width: auto;
         height:50px;
-        color:white;
         font-weight:bold;
-        background: var(--theme-color);
+        background: var(--solid-color);
         border-radius: var(--border-radius);
     }
     report header p{

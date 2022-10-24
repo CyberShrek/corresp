@@ -22,8 +22,8 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
-
             <exclusions>
+
                 <!-- UNSAFETY: -->
                 <exclusion>
                     <groupId>org.apache.logging.log4j</groupId>
@@ -35,11 +35,20 @@
                     <groupId>org.yaml</groupId>
                     <artifactId>snakeyaml</artifactId>
                 </exclusion>
-                <exclusion>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-starter-tomcat</artifactId>
-                </exclusion>
             </exclusions>
+        </dependency>
+
+        <!-- SECURITY -->
+        <dependency>
+            <groupId>com.vniizht.ucheck</groupId>
+            <artifactId>UCheckRemote</artifactId>
+            <version>1.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -57,11 +66,11 @@
             <scope>runtime</scope>
         </dependency>
 
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.boot</groupId>-->
+<!--            <artifactId>spring-boot-starter-test</artifactId>-->
+<!--            <scope>test</scope>-->
+<!--        </dependency>-->
     </dependencies>
 
     <build>
