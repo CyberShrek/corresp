@@ -3,11 +3,27 @@
     import Carrier from "./Carrier.svelte"
     import Depstinature from "./Depstinature.svelte"
     import {createEventDispatcher} from "svelte"
+    import {CarrierEntity, DepstinatureEntity, PeriodEntity} from "../../web/model/ParamFormEntity"
     const dispatch = createEventDispatcher()
 
-    let period = {}, carrier = {}, departure = {}, destination = {}
+    let period = new PeriodEntity(),
+        carrier = new CarrierEntity(),
+        departure = new DepstinatureEntity(),
+        destination = new DepstinatureEntity()
 
     let width
+
+    function generateReport(){
+        dispatch("generateReport1",
+            {
+                date1               : period.date1,
+                date2               : period.date2,
+                compareWithLastYear : period.compareWithLastYear,
+                carrierCode         : carrier.selected.code,
+                fromCodes           : departure.selectedStations.map(s => s.code),
+                toCodes             : destination.selectedStations.map(s => s.code)
+            })
+    }
 
 </script>
 <form bind:offsetWidth={width}>
@@ -27,35 +43,23 @@
         </div></carrier>
 
     <departure class="field">
-        <p> Отправления </p>
+        <p> Объекты отправления </p>
         <div><Depstinature inputDate={period.date1}
-                           bind:type={departure.type}
-                           bind:selected={departure.selected}
+                           bind:selectedStations={departure.selectedStations}
                            bind:isValid={departure.isValid}/>
         </div></departure>
 
     <destination class="field">
-        <p> Назначения </p>
+        <p> Объекты назначения </p>
         <div><Depstinature inputDate={period.date1}
-                           bind:type={destination.type}
-                           bind:selected={destination.selected}
+                           bind:selectedStations={destination.selectedStations}
                            bind:isValid={destination.isValid}/>
         </div></destination>
 </form>
 
 <input type="submit"
        class:unavailable={!(period.isValid && carrier.isValid && departure.isValid && destination.isValid)}
-       on:click|preventDefault={() => dispatch("generateReport1",
-       {
-           date1               : period.date1,
-           date2               : period.date2,
-           compareWithLastYear : period.compareWithLastYear,
-           carrierCode         : carrier.selected.code,
-           departureType       : departure.type,
-           departureCodes      : departure.selected.map(s => s.code),
-           destinationType     : destination.type,
-           destinationCodes    : destination.selected.map(s => s.code)
-       })}
+       on:click|preventDefault={generateReport}
        value="Сформировать отчёт" style="width: {width}px"/>
 
 <style>
@@ -82,7 +86,7 @@
         width: 100%;
         text-align: center;
         font-size: large;
-        padding: 10px 0;
+        padding: 5px 0 10px 0;
         margin: 0 0 5px 0;
         border-bottom: var(--border);
     }

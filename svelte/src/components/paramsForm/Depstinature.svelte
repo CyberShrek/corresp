@@ -2,13 +2,12 @@
 import {httpClient} from "../../web/httpClient"
 import Dropdown from "../common/Dropdown.svelte"
 import MultiSelect from "../common/MultiSelect.svelte"
-import {afterUpdate} from "svelte"
 
-export let inputDate, type, selected, isValid
+export let inputDate, selectedStations, isValid
 
 let countries = [], selectedCountries = [],
     roads     = [], selectedRoads     = [],
-    stations  = [], selectedStations  = []
+    stations  = []
 
 // These setters are only used to avoid unwanted calls in the chain of reactive promises
 const setCountries=(val) => val ? countries = val : countries = []
@@ -19,42 +18,32 @@ $: countriesPromise = inputDate ?
     httpClient.getCountriesByDate(inputDate)
         .then(r => setCountries(r)) : setCountries(null)
 
-$: roadsPromise = selectedCountries.length > 0 ?
-    httpClient.getRoadsByDateAndCountryCodes(inputDate, selectedCountries.map(country => country.code))
+$: roadsPromise = inputDate && selectedCountries.length > 0 ?
+    httpClient.getRoadsByDateAndCountries(inputDate, selectedCountries)
         .then(r => setRoads(r)) : setRoads(null)
 
-$: stationsPromise = selectedRoads.length > 0 ?
-    httpClient.getStationsByDateAndRoadCodes(inputDate, selectedRoads.map(road => road.code))
+$: stationsPromise = inputDate && selectedRoads.length > 0 ?
+    httpClient.getStationsByDateAndRoads(inputDate, selectedRoads)
         .then(r => setStations(r)) : setStations(null)
 
-afterUpdate(() => {
-    if (selectedStations.length > 0)  { type = "s"; selected = selectedStations }
-    else
-    if (selectedRoads.length > 0)     { type = "r"; selected = selectedRoads }
-    else
-    if (selectedCountries.length > 0) { type = "c"; selected = selectedCountries }
-    else
-        type = selected = undefined
-})
-
-$: isValid = type && selected && selected.length > 0
+$: isValid = selectedStations && selectedStations.length > 0
 
 const nameAndCodeOf=(entity) => entity.name + " ("+entity.code+")"
 
 </script>
 
 <!-- COUNTRIES -->
-<MultiSelect placeholder="Государства"
-             options={countries}
-             bind:selectedOptions={selectedCountries}/>
+<MultiSelect options={countries}
+             bind:selectedOptions={selectedCountries}
+             placeholder="Государство"
+             singleSelect={true}/>
 
 {#await countriesPromise} <Dropdown text="Загружаю список государств"/>
 {:catch error}            <Dropdown text="Не удалось загрузить список государств" type="error"/>
 {/await}
 
 <!-- ROADS -->
-<MultiSelect placeholder={`Дороги${selectedRoads.length > 0 ? "" : " (все)"}`}
-             allowSelectAll={true}
+<MultiSelect placeholder={"Дороги"}
              options={roads}
              bind:selectedOptions={selectedRoads}/>
 
@@ -63,7 +52,7 @@ const nameAndCodeOf=(entity) => entity.name + " ("+entity.code+")"
 {/await}
 
 <!-- STATIONS -->
-<MultiSelect placeholder={`Станции${selectedRoads.length > 0 ? "" : " (все)"}`}
+<MultiSelect placeholder={"Станции"}
              allowSelectAll={true}
              options={stations}
              bind:selectedOptions={selectedStations}/>

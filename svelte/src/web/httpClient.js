@@ -12,7 +12,6 @@ httpClient.send=(resourse, method, body) => fetch(resourse,
     })
 
 httpClient.get= (resourse) => httpClient.send(resourse, "GET")
-httpClient.post=(resourse, body) => httpClient.send(resourse, "POST", body)
 
 httpClient.getCarriersByDate=(date) => httpClient
     .get(`carriers?date=${date}`)
@@ -20,12 +19,16 @@ httpClient.getCarriersByDate=(date) => httpClient
 httpClient.getCountriesByDate=(date) => httpClient
     .get(`countries?date=${date}`)
 
-httpClient.getRoadsByDateAndCountryCodes=(date, countryCodes) => httpClient
-    .get(`roads?date=${date}&countryCodes=${countryCodes}`)
+httpClient.getRoadsByDateAndCountries=(date, countries) => httpClient
+    .get('roads?'+ new URLSearchParams({date, countryCodes: countries.map(country => country.code)}).toString())
 
-httpClient.getStationsByDateAndRoadCodes=(date, roadCodes) => httpClient
-    .get(`stations?date=${date}&roadCodes=${encodeURIComponent(roadCodes)}`)
+httpClient.getStationsByDateAndRoads=(date, roads) => httpClient
+    .get(`stations?` + new URLSearchParams({
+        date,
+        roadCodes: roads
+            .map(road => road.countryCode + (road.code === "," ? "comma" : road.code))
+    }))
 
 httpClient.getReportByParams=(reportNum, params) => httpClient
-    .get(`reports/${reportNum}?`+new URLSearchParams(params).toString())
+    .get(`reports/${reportNum}?`+ new URLSearchParams(params).toString())
     .then(reportTable => new Report(reportNum, reportTable))

@@ -1,24 +1,17 @@
 package me.illyc.corresp.data
 
-import me.illyc.corresp.data.sql.Select.Reports
-import me.illyc.corresp.data.sql.Select.Reports.report1ByParams
-import me.illyc.corresp.data.sql.Select.Reports.report2ByParams
-import me.illyc.corresp.data.sql.Select.Reports.report4ByParams
-import me.illyc.corresp.data.sql.Select.Reports.report5ByParams
-import me.illyc.corresp.data.sql.Select.Reports.report6ByParams
-import me.illyc.corresp.data.sql.Select.Reports.report7ByParams
+import me.illyc.corresp.data.sql.*
 import me.illyc.corresp.model.Report
-import me.illyc.corresp.model.Params
+import me.illyc.corresp.model.ReportInputParams
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.support.rowset.SqlRowSet
 import org.springframework.stereotype.Repository
-import kotlin.collections.ArrayList
 
 @Repository
 class ReportDao (private val jdbc: JdbcTemplate) {
 
     // Returns a new Report corresponding to it's number and parameters
-    fun getReportByParams(num: Byte, params: Params) = when(num){
+    fun getReportByParams(num: Byte, params: ReportInputParams) = when(num){
         1.toByte() -> getReport(::report1ByParams, params)
         2.toByte() -> getReport(::report2ByParams, params)
         3.toByte() -> Report(arrayOf(), ArrayList()) // TODO
@@ -30,17 +23,17 @@ class ReportDao (private val jdbc: JdbcTemplate) {
     }
 
     // High-ordered
-    private fun getReport(getQueryByParams: (Params) -> Reports.ReportQuery, params: Params): Report{
+    private fun getReport(getQueryByParams: (ReportInputParams) -> ReportTemplate, params: ReportInputParams): Report{
         val reportQuery = getQueryByParams(params)
+
         if(params.compareWithLastYear){
-            reportQuery.text = reportQuery
-                .textComparedByLY(getLastYearParams(params))
+            reportQuery.query = reportQuery
+                .queryComparedByLY(getLastYearInputParams(params))
         }
-        println(reportQuery.text.trimIndent())
-        return rowSetToReport(jdbc.queryForRowSet(reportQuery.text))
+        return rowSetToReport(jdbc.queryForRowSet(reportQuery.query))
     }
 
-    private fun getLastYearParams(params: Params): Params {
+    private fun getLastYearInputParams(params: ReportInputParams): ReportInputParams {
         var date1LY = ""; var date2LY = ""
         val rowSet = jdbc.queryForRowSet("""SELECT (date '${params.date1}' - interval '1 year')::date AS date1, 
                                                        (date '${params.date2}' - interval '1 year')::date AS date2""")
@@ -48,10 +41,9 @@ class ReportDao (private val jdbc: JdbcTemplate) {
             date1LY = rowSet.getString("date1") ?: "1970-01-01"
             date2LY = rowSet.getString("date2") ?: "1970-01-01"
         }
-        return Params(
+        return ReportInputParams(
             date1 = date1LY, date2 = date2LY, carrierCode = params.carrierCode,
-            departureType   = params.departureType,   departureCodes   = params.departureCodes,
-            destinationType = params.destinationType, destinationCodes = params.destinationCodes
+            fromCodes = params.fromCodes, toCodes = params.toCodes
         )
     }
 
