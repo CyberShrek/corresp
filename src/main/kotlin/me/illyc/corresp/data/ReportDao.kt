@@ -11,14 +11,18 @@ import org.springframework.stereotype.Repository
 class ReportDao (private val jdbc: JdbcTemplate) {
 
     // Returns a new Report corresponding to it's number and parameters
-    fun getReportByParams(num: Byte, params: ReportInputParams) = when(num){
-        1.toByte() -> getReport(::report1ByParams, params)
-        2.toByte() -> getReport(::report2ByParams, params)
-        3.toByte() -> Report(arrayOf(), ArrayList()) // TODO
-        4.toByte() -> getReport(::report4ByParams, params)
-        5.toByte() -> getReport(::report5ByParams, params)
-        6.toByte() -> getReport(::report6ByParams, params)
-        7.toByte() -> getReport(::report7ByParams, params)
+    fun getReportByParams(num: Byte, params: ReportInputParams): Any = when(num){
+        1.toByte() -> getReport(::getReport1ByParams, params)
+        2.toByte() -> getReport(::getReport2ByParams, params)
+        // Report3 consists of daily and monthly Reports
+        3.toByte() -> object {
+            val dailyReport   = getReport(::getDailyReport3ByParams, params)
+            val monthlyReport = getReport(::getMonthlyReport3ByParams, params)
+        }
+        4.toByte() -> getReport(::getReport4ByParams, params)
+        5.toByte() -> getReport(::getReport5ByParams, params)
+        6.toByte() -> getReport(::getReport6ByParams, params)
+        7.toByte() -> getReport(::getReport7ByParams, params)
         else -> throw Exception("Unknowing report number: $num")
     }
 

@@ -1,6 +1,6 @@
 <script>
 import {httpClient} from "../../web/httpClient"
-import Dropdown from "../common/Dropdown.svelte"
+import Dropdown from "../modals/Dropdown.svelte"
 import MultiSelect from "../common/MultiSelect.svelte"
 
 export let inputDate, selectedStations, isValid
@@ -35,7 +35,7 @@ const nameAndCodeOf=(entity) => entity.name + " ("+entity.code+")"
 <!-- COUNTRIES -->
 <MultiSelect options={countries}
              bind:selectedOptions={selectedCountries}
-             placeholder="Государство"
+             placeholder={"Государств" + ((countries.length === 0) ? "а не найдены" : "о")}
              singleSelect={true}/>
 
 {#await countriesPromise} <Dropdown text="Загружаю список государств"/>
@@ -43,7 +43,7 @@ const nameAndCodeOf=(entity) => entity.name + " ("+entity.code+")"
 {/await}
 
 <!-- ROADS -->
-<MultiSelect placeholder={"Дороги"}
+<MultiSelect placeholder={"Дороги" + ((selectedCountries.length > 0 && roads.length === 0) ? " не найдены" : "")}
              options={roads}
              bind:selectedOptions={selectedRoads}/>
 
@@ -52,7 +52,7 @@ const nameAndCodeOf=(entity) => entity.name + " ("+entity.code+")"
 {/await}
 
 <!-- STATIONS -->
-<MultiSelect placeholder={"Станции"}
+<MultiSelect placeholder={"Станции" + ((selectedRoads.length > 0 && stations.length === 0) ? " не найдены" : "")}
              allowSelectAll={true}
              options={stations}
              bind:selectedOptions={selectedStations}/>

@@ -21,29 +21,8 @@
     })
 </script>
 
-    {#if type==="button"}
-        <input type="button"
-               bind:this={render}
-               transition:slide
-               style="top:{top}; width:{width}; font-size:{size}"
-               value={text}/>
-    {:else}
-        <p bind:this={render}
-           transition:blur
-           style="background:{background}; color: white; top:{top}; width:{width}; font-size:{size}">
-            {text}
-        </p>
-    {/if}
-
-
-<style>
-    p, input[type=button] {
-        z-index: 10;
-        position:absolute;
-        margin: 5px;
-        opacity: 0.8;
-        text-align: center;
-        white-space: normal;
-        border-radius: var(--border-radius);
-    }
-</style>
+<dropdown bind:this={render}
+   transition:blur
+   style="background:{background}; color: white; top:{top}; width:{width}; font-size:{size}">
+    {text}
+</dropdown>

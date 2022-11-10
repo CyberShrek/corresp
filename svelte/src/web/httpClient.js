@@ -1,4 +1,4 @@
-import {Report} from "./model/Report"
+import {Report, Report3} from "./model/Report"
 
 export const httpClient = {}
 
@@ -31,4 +31,11 @@ httpClient.getStationsByDateAndRoads=(date, roads) => httpClient
 
 httpClient.getReportByParams=(reportNum, params) => httpClient
     .get(`reports/${reportNum}?`+ new URLSearchParams(params).toString())
-    .then(reportTable => new Report(reportNum, reportTable))
+    .then(report => {
+        if (reportNum !== 3)
+            return (report.body.length <= 1) // This means that the report is empty. The first row is "Total"
+                ? false : new Report(reportNum, report)
+        else
+            return (report.dailyReport.body.length + report.monthlyReport.body.length <= 1) // Almost same
+                ? false : new Report3(report.dailyReport, report.monthlyReport)
+    })

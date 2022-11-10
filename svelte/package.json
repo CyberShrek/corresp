@@ -19,6 +19,7 @@
     "svelte-multiselect": "^6.0.3"
   },
   "dependencies": {
+    "app.css": "^0.1.2",
     "sirv-cli": "^2.0.0"
   }
 }

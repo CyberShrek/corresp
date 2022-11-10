@@ -1,0 +1,69 @@
+:root{
+	--theme-color: skyblue;
+	--submit-color: darkseagreen;
+	--solid-color: whitesmoke;
+	--border: thin solid lightgray;
+	--border-radius: 5px;
+	--shadow: 0 2px 5px darkgray;
+	
+	accent-color: var(--theme-color);
+}
+
+body {
+	display: grid;
+	margin: 0 0 20vh 0;
+	padding: 0;
+	overflow-y: scroll;
+	overflow-x: hidden;
+	background-image: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+}
+* {
+	font-family: Calibri, serif;
+	font-size: medium;
+	transition: 0.1s;
+}
+p{
+	cursor: default;
+	text-align: center;
+	font-size: x-large;
+}
+
+img {
+	user-select: none;
+	pointer-events: none;
+}
+
+input{
+	padding: 5px;
+	margin: 5px;
+}
+input, .input, button{
+	z-index: 10;
+	cursor: pointer;
+	border: var(--border);
+	border-radius: var(--border-radius);
+}
+input[type=date], input[type=text]{cursor: text;}
+
+input[type=text]{
+	margin: 0;
+	min-width: 100px;
+}
+
+input[type=button]:hover,  input[type=submit]:hover,  button:hover  { filter: contrast(85%) }
+input[type=button]:active, input[type=submit]:active, button:active { filter: contrast(60%) }
+
+.wrong { outline: 3px solid red }
+
+.unavailable {
+	pointer-events: none;
+	user-select: none;
+	filter: grayscale(0.5) opacity(0.5);
+}
+
+.link {
+	cursor: pointer;
+	font-weight: bold;
+	color: deepskyblue;
+	text-decoration: underline;
+}

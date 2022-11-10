@@ -1,6 +1,6 @@
 <script>
     import {httpClient} from "../../web/httpClient"
-    import Dropdown from "../common/Dropdown.svelte"
+    import Dropdown from "../modals/Dropdown.svelte"
     import MultiSelect from "../common/MultiSelect.svelte"
 
     export let inputDate, selected, isValid

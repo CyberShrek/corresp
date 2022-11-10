@@ -1,95 +1,67 @@
 <script>
-    import {fade} from "svelte/transition"
-    import PopUp from "../../common/PopUp.svelte"
-    import {scrollInto} from "../../../utils"
+    import PopUp from "../../modals/PopUp.svelte"
     import {httpClient} from "../../../web/httpClient"
 
     export let
         title,
         report,
         reportNum,
+        reportEl,
         inputParams,
-        windowed = false
+        reportPromise,
+        allowExcelExport = false,
+        allowImageExport = false
 
-    $: promise = inputParams && httpClient.getReportByParams(reportNum, inputParams)
+    $: reportPromise = inputParams && httpClient.getReportByParams(reportNum, inputParams)
         .then(res => updateReport(res))
 
-    let reportEl
     function updateReport(rep) {
         report = rep
-        // scrollInto(reportEl)
+        console.log(report)
+    }
+
+    function exportExcel(){
+        window.open('data:application/vnd.ms-excel,' + encodeURIComponent(reportEl.querySelector("table").outerHTML))
+    }
+
+    function exportImage(){
+
     }
 
 </script>
 
-{#if windowed}
-    {#await promise}
-        <PopUp text="Загрузка отчёта" type="loading"/>
-    {:then _}
-        <PopUp on:exit>
-            <report transition:fade
-                    bind:this={reportEl}
-                    style="height: {windowed ? '' : '100vh'}">
+{#await reportPromise}
+    <PopUp text="Загрузка отчёта" type="loading"/>
+{:then _}
+    {#if inputParams && !report}
+        <PopUp text="Нет данных по выбранным параметрам" type="warning"
+               on:exit={() => inputParams = null}/>
+    {/if}
+<!--{:catch error}-->
+    <!--{#if inputParams}-->
+    <!--    <PopUp text={"Ошибка: " + error} type="error"-->
+    <!--           on:exit={() => inputParams = null}/>-->
+    <!--{/if}-->
+{/await}
 
-                {#if report.rows.length > 1}
-                    <header> <p>{title}</p> </header>
-                    <slot></slot>
-                {:else}
-                    Ничего не найдено 😕
-                {/if}
-            </report>
-        </PopUp>
-    {:catch error}
-        <PopUp on:exit>
-            Ошибка загрузки 🤬
-        </PopUp>
-    {/await}
-{:else}
-    <report transition:fade
-            bind:this={reportEl}
-            style="min-height: {windowed ? 'auto' : '100vh'}">
-        {#await promise}
-            <PopUp text="Загрузка отчёта" type="loading"/>
-        {:then _}
-            <header> <p>{title}</p> </header>
-            {#if report.rows.length > 1}
-                <slot></slot>
-                {#if scrollInto(reportEl)}{''}{/if}
-            {:else}
-                Ничего не найдено 😕
-                {#if scrollInto(reportEl)}{''}{/if}
-            {/if}
-        {:catch error}
-            <header> <p>{title}</p> </header>
-            Ошибка загрузки 🤬
-            {#if scrollInto(reportEl)}{''}{/if}
-        {/await}
-    </report>
-{/if}
-
-
-<style>
-    report {
-        display: flex;
-        flex-direction: column;
-        text-align: center;
-        background: white;
-        border-radius: calc(var(--border-radius) + 2px);
-        box-shadow: var(--shadow)
-    }
-    report header {
-        display:flex;
-        justify-content:center;
-        align-items:center;
-        margin: 2px;
-        width: auto;
-        height:50px;
-        font-weight:bold;
-        background: var(--solid-color);
-        border-radius: var(--border-radius);
-    }
-    report header p{
-        font-size: x-large;
-        text-align: center;
-    }
-</style>
+<report bind:this={reportEl} class:unavailable={!report}>
+    <header>
+        <p>{title}</p>
+        {#if allowExcelExport}
+            <button title="Экпортировать в .xlsx"
+                    on:click={exportExcel}>
+                <img src="img/download.svg" alt="">
+            </button>
+        {/if}
+        {#if allowImageExport}
+            <button title="Экпортировать в .jpeg"
+                    on:click={exportImage}>
+                <img src="img/download.svg" alt="">
+            </button>
+        {/if}
+        <slot name="after-button"></slot>
+    </header>
+    {#if report}
+        <slot></slot>
+    {/if}
+</report>

@@ -1,5 +1,5 @@
 <script>
-    import Dropdown from "../common/Dropdown.svelte"
+    import Dropdown from "../modals/Dropdown.svelte"
     import {httpClient} from "../../web/httpClient";
 
     export let
@@ -8,11 +8,27 @@
         compareWithLastYear = false,
         isValid
 
+    let daysCount
     const getDaysFromDate=(date) => new Date(date).getTime() / (1000 * 3600 * 24)
-    $: date1Days = getDaysFromDate(date1)
-    $: date2Days = getDaysFromDate(date2)
-    $: daysCount = date2Days - date1Days
-    $: isValid   = daysCount >= 0 && daysCount <= 62
+    function updateDaysCount() {
+        daysCount = getDaysFromDate(date2) - getDaysFromDate(date1)
+    }
+
+    const resetDate1=() => date1 = date2
+    const resetDate2=() => date2 = date1
+    // On date1 update
+    $: if(date1){
+        updateDaysCount()
+        if(daysCount < 0) resetDate2()
+    }
+    // On date2 update
+    $: if(!date2) resetDate2()
+    else {
+        updateDaysCount()
+        if(daysCount < 0) resetDate1()
+    }
+
+    $: isValid = daysCount <= 62
 
 </script>
 
@@ -21,8 +37,6 @@
 
 {#if daysCount > 62}
     <Dropdown text="Укажите период менее 62 дней" type="error"/>
-{:else if daysCount < 0}
-    <Dropdown text="Дата 'От' не может быть больше даты 'До'" type="error"/>
 {/if}
 
 <label> <input type="checkbox" bind:checked={compareWithLastYear}> Сравнить с прошлым годом </label>

@@ -26,89 +26,39 @@
     }
 
 </script>
-<form bind:offsetWidth={width}>
-    <period class="field">
+<form id="params-form" bind:offsetWidth={width}>
+    <field class="period">
         <p> Период </p>
         <div><Period bind:date1={period.date1}
                      bind:date2={period.date2}
                      bind:compareWithLastYear={period.compareWithLastYear}
                      bind:isValid={period.isValid}/>
-        </div></period>
+        </div></field>
 
-    <carrier class="field">
+    <field class="carrier">
         <p> Перевозчик </p>
         <div><Carrier inputDate={period.date1}
                       bind:selected={carrier.selected}
                       bind:isValid={carrier.isValid}/>
-        </div></carrier>
+        </div></field>
 
-    <departure class="field">
+    <field class="departure">
         <p> Объекты отправления </p>
         <div><Depstinature inputDate={period.date1}
                            bind:selectedStations={departure.selectedStations}
                            bind:isValid={departure.isValid}/>
-        </div></departure>
+        </div></field>
 
-    <destination class="field">
+    <field class="destination">
         <p> Объекты назначения </p>
         <div><Depstinature inputDate={period.date1}
                            bind:selectedStations={destination.selectedStations}
                            bind:isValid={destination.isValid}/>
-        </div></destination>
+        </div></field>
 </form>
 
 <input type="submit"
+       id="params-submit"
        class:unavailable={!(period.isValid && carrier.isValid && departure.isValid && destination.isValid)}
        on:click|preventDefault={generateReport}
        value="Сформировать отчёт" style="width: {width}px"/>
-
-<style>
-    form {
-        justify-self: center;
-        display: flex;
-        margin: 5px;
-        background-color: var(--solid-color);
-        border-radius: var(--border-radius);
-        box-shadow: var(--shadow);
-    }
-
-    form > .field {
-        display: flex;
-        flex-direction: column;
-        min-width: 180px;
-        max-width: 25vw;
-        padding: 0 10px;
-        margin:  10px 0;
-    }
-
-    form > .field > p {
-        justify-self: start;
-        width: 100%;
-        text-align: center;
-        font-size: large;
-        padding: 5px 0 10px 0;
-        margin: 0 0 5px 0;
-        border-bottom: var(--border);
-    }
-
-    form > .field > div {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        height: 100%;
-    }
-
-    form > period, form > carrier, form > departure { border-right: var(--border) }
-
-    input[type=submit]{
-        z-index: 10;
-        display: block;
-        justify-self: center;
-        margin-bottom: 100px;
-        font-size: x-large;
-        color: white;
-        background: var(--submit-color);
-        border: 0;
-        box-shadow: var(--shadow);
-    }
-</style>
