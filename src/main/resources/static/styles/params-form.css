@@ -1,0 +1,51 @@
+#params-form {
+    justify-self: center;
+    display: flex;
+    margin: 5px;
+    background-color: var(--solid-color);
+    border-radius: var(--border-radius);
+    border: var(--border);
+    
+}
+
+#params-form > field {
+    display: flex;
+    flex-direction: column;
+    min-width: 180px;
+    max-width: 25vw;
+    padding: 0 10px;
+    margin:  10px 0;
+}
+
+#params-form > field > p {
+    justify-self: start;
+    width: 100%;
+    text-align: center;
+    font-size: large;
+    padding: 5px 0 10px 0;
+    margin: 0 0 5px 0;
+    border-bottom: var(--border);
+}
+
+#params-form > field > div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+}
+
+field.period,
+field.carrier,
+field.departure { border-right: var(--border) }
+
+#params-submit{
+    z-index: 1;
+    display: block;
+    justify-self: center;
+    margin-bottom: 100px;
+    font-size: x-large;
+    color: white;
+    background: var(--submit-color);
+    border: 0;
+    box-shadow: var(--shadow);
+}

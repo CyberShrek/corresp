@@ -1,0 +1,92 @@
+dropdown {
+    z-index: 100;
+    position:absolute;
+    margin: 5px;
+    opacity: 0.8;
+    text-align: center;
+    white-space: normal;
+    border-radius: var(--border-radius);
+}
+
+floating-button {
+    cursor: pointer;
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0.6;
+    height: 40px;
+    width:  40px;
+    border: none;
+    border-radius: var(--border-radius);
+    box-shadow:var(--shadow);
+}
+floating-button:hover{
+    opacity: 1;
+}
+floating-button img {
+    height: 80%;
+    width:  80%;
+}
+
+backdrop {
+    z-index: 100;
+    position: fixed;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+    font-size: x-large;
+    color: white;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+backdrop svg {
+    animation: rotate 2s linear infinite;
+    width: 50px;
+    height: 50px;
+}
+backdrop svg circle {
+    stroke: var(--theme-color);
+    filter: contrast(0.5) saturate(5);
+    stroke-linecap: round;
+    animation: dash 1.5s ease-in-out infinite;
+}
+backdrop modal {
+    color: black;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    min-height: 100px;
+    min-width: 100px;
+    padding: 10px;
+    background-color: var(--solid-color);
+    border-radius: var(--border-radius);
+    
+}
+
+
+@keyframes rotate {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes dash {
+    0% {
+        stroke-dasharray: 1, 150;
+        stroke-dashoffset: 0;
+    }
+    50% {
+        stroke-dasharray: 90, 150;
+        stroke-dashoffset: -35;
+    }
+    100% {
+        stroke-dasharray: 90, 150;
+        stroke-dashoffset: -124;
+    }
+}

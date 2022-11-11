@@ -1,0 +1,65 @@
+multi-select {
+    display: flex;
+    cursor:default;
+    flex-wrap: wrap;
+    margin: 10px 0 0 0;
+    background:white
+}
+multi-select > selected-option{
+    cursor:pointer;
+    padding: 3px;
+    margin:  1px;
+    text-align: center;
+    border-radius: var(--border-radius);
+    border: 2px solid var(--theme-color);
+}
+multi-select > selected-option:hover{ border: 2px solid red;}
+multi-select text-filter{
+    display: flex;
+    justify-content: stretch;
+    align-items: center;
+    width: 100%;
+    color: white;
+}
+multi-select text-filter > input[type=text]{
+    flex-grow: 1;
+    padding: 5px;
+    margin: 0;
+    border:none;
+    background:initial;
+}
+multi-select text-filter > input[type=text]:focus{
+    outline: none;
+}
+multi-select text-filter > deselector{
+    cursor: pointer;
+    user-select: none;
+    margin-right: 5px;
+    color: gray;
+}
+multi-select text-filter > deselector:hover{
+    color: red;
+}
+
+options-menu {
+    z-index: 100;
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    overflow-y: scroll;
+    min-width: 200px;
+    min-height: 100px;
+    background: white;
+    border: var(--border);
+    border-radius: var(--border-radius);
+    box-shadow:var(--shadow);
+}
+options-menu > option, options-menu > void { padding: 5px; }
+options-menu > option {
+    z-index: 1;
+    cursor: pointer;
+    background: white;
+}
+options-menu > option:hover {  background: lightgray; }
+options-menu > void { position: absolute; }
+options-menu button { border-radius: 0; }
