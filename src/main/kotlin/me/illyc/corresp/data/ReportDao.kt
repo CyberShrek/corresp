@@ -41,6 +41,7 @@ class ReportDao (private val jdbc: JdbcTemplate) {
         var date1LY = ""; var date2LY = ""
         val rowSet = jdbc.queryForRowSet("""SELECT (date '${params.date1}' - interval '1 year')::date AS date1, 
                                                        (date '${params.date2}' - interval '1 year')::date AS date2""")
+
         if (rowSet.next()){
             date1LY = rowSet.getString("date1") ?: "1970-01-01"
             date2LY = rowSet.getString("date2") ?: "1970-01-01"
